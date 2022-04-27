@@ -14,7 +14,7 @@ SERVER_PORT="8885"
 DUBBO_PORT=""
 JMX_ARG="-Xmx512m -Xms256m -Xmn128m"
 MAIN="cn.com.payu.Application"
-SERVER_NAME="enjoy-spend-appserver"
+SERVER_NAME="easy-come-loans-appserver"
 
 ###########end#######################
 

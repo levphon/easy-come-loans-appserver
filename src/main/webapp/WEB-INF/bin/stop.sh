@@ -7,7 +7,7 @@
 #                                  #
 ####################################
 
-SERVER_NAME="enjoy-spend-appserver"
+SERVER_NAME="easy-come-loans-appserver"
 PID_DIR="/app/soft/java_project/pids"
 
 cd `dirname $0`

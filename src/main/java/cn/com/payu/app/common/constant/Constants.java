@@ -13,7 +13,7 @@ public final class Constants extends BasicConstants {
 
     public final static String SERVER_NAME = "enjoy-spend";
 
-    public final static String APP_SERVER_NAME = "enjoy-spend-appserver";
+    public final static String APP_SERVER_NAME = "easy-come-loans-appserver";
 
     public final static String MNG_SERVER_NAME = "enjoy-spend-mngserver";
 
