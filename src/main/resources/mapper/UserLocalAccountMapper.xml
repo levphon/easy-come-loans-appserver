@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.payu.app.modules.mapper.UserLocalAccountMapper">
+    <resultMap id="BaseResultMap" type="cn.com.payu.app.modules.entity.UserLocalAccount">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="user_id" jdbcType="INTEGER" property="userId"/>
+        <result column="auth_id" jdbcType="INTEGER" property="authId"/>
+        <result column="union_id" jdbcType="VARCHAR" property="unionId"/>
+        <result column="username" jdbcType="VARCHAR" property="username"/>
+        <result column="avatar" jdbcType="VARCHAR" property="avatar"/>
+        <result column="yx_token" jdbcType="VARCHAR" property="yxToken"/>
+        <result column="ry_token" jdbcType="VARCHAR" property="ryToken"/>
+        <result column="del_flag" jdbcType="TINYINT" property="delFlag"/>
+        <result column="created_date" jdbcType="TIMESTAMP" property="createdDate"/>
+        <result column="created_by" jdbcType="INTEGER" property="createdBy"/>
+        <result column="updated_date" jdbcType="TIMESTAMP" property="updatedDate"/>
+        <result column="updated_by" jdbcType="INTEGER" property="updatedBy"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        id, user_id, auth_id, union_id, username, avatar, yx_token, ry_token, del_flag, created_date, created_by,
+        updated_date, updated_by
+    </sql>
+
+    <select id="selectByAuthId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_cust_user_local_account
+        where auth_id = #{authId}
+        and del_flag = 0
+    </select>
+
+    <select id="selectByUserId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_cust_user_local_account
+        where user_id = #{userId}
+        and del_flag = 0
+    </select>
+
+    <select id="selectAppUserByUserId" resultType="cn.com.payu.app.modules.model.AppUser">
+        select tcu.id,
+               tcula.union_id unionId,
+               tcula.username,
+               tcu.account,
+               tcula.avatar,
+               tcu.blacklist,
+               tcu.channel,
+               tcu.from_app   fromApp,
+               tcup.id        profileId
+        from t_cust_user tcu
+                 left join t_cust_user_local_account tcula on tcu.id = tcula.user_id
+                 left join t_cust_user_profile tcup on tcula.user_id = tcup.user_id
+        where tcu.del_flag = 0
+          and tcu.id = #{userId}
+    </select>
+
+    <select id="selectByUnionId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_cust_user_local_account
+        where union_id = #{unionId}
+        and del_flag = 0
+    </select>
+
+    <update id="updateIMTokenById">
+        update t_cust_user_local_account
+        set ry_token = #{token}
+        where id = #{id}
+    </update>
+
+    <update id="logicDeleteById">
+        update t_cust_user_local_account
+        set del_flag = -1
+        where id = #{id}
+    </update>
+
+    <update id="logicDeleteByUserId">
+        update t_cust_user_local_account
+        set del_flag = -1
+        where user_id = #{userId}
+    </update>
+</mapper>

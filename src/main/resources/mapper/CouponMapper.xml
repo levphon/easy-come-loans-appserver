@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.payu.app.modules.mapper.CouponMapper">
+    <resultMap id="BaseResultMap" type="cn.com.payu.app.modules.entity.Coupon">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="title" jdbcType="VARCHAR" property="title"/>
+        <result column="icon" jdbcType="VARCHAR" property="icon"/>
+        <result column="used" jdbcType="TINYINT" property="used"/>
+        <result column="type" jdbcType="TINYINT" property="type"/>
+        <result column="with_special" jdbcType="TINYINT" property="withSpecial"/>
+        <result column="with_sn" jdbcType="VARCHAR" property="withSn"/>
+        <result column="with_amount" jdbcType="DECIMAL" property="withAmount"/>
+        <result column="cost_amount" jdbcType="DECIMAL" property="costAmount"/>
+        <result column="used_amount" jdbcType="DECIMAL" property="usedAmount"/>
+        <result column="quota" jdbcType="INTEGER" property="quota"/>
+        <result column="total_quota" jdbcType="INTEGER" property="totalQuota"/>
+        <result column="take_count" jdbcType="INTEGER" property="takeCount"/>
+        <result column="used_count" jdbcType="INTEGER" property="usedCount"/>
+        <result column="start_time" jdbcType="TIMESTAMP" property="startTime"/>
+        <result column="end_time" jdbcType="TIMESTAMP" property="endTime"/>
+        <result column="valid_type" jdbcType="TINYINT" property="validType"/>
+        <result column="valid_start_time" jdbcType="TIMESTAMP" property="validStartTime"/>
+        <result column="valid_end_time" jdbcType="TIMESTAMP" property="validEndTime"/>
+        <result column="valid_days" jdbcType="INTEGER" property="validDays"/>
+        <result column="used_quantity" jdbcType="INTEGER" property="usedQuantity"/>
+        <result column="remark" jdbcType="VARCHAR" property="remark"/>
+        <result column="enable_status" jdbcType="TINYINT" property="enableStatus"/>
+        <result column="del_flag" jdbcType="TINYINT" property="delFlag"/>
+        <result column="created_date" jdbcType="TIMESTAMP" property="createdDate"/>
+        <result column="created_by" jdbcType="INTEGER" property="createdBy"/>
+        <result column="updated_date" jdbcType="TIMESTAMP" property="updatedDate"/>
+        <result column="updated_by" jdbcType="INTEGER" property="updatedBy"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        id, title, icon, used, `type`, with_special, with_sn, with_amount, cost_amount, used_amount,
+        quota, total_quota, take_count, used_count, start_time, end_time, valid_type, valid_start_time,
+        valid_end_time, valid_days, used_quantity, remark, enable_status, del_flag, created_date,
+        created_by, updated_date, updated_by
+    </sql>
+
+    <select id="selectById" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_coupon
+        where del_flag = 0
+        and enable_status = 1
+        and id = #{id}
+    </select>
+
+    <select id="selectByUsed" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_coupon
+        where del_flag = 0
+        and enable_status = 1
+        and used = #{used}
+    </select>
+</mapper>

@@ -1,0 +1,8 @@
+{
+  "activeStatus": 0,
+  "amountOption": "[{\"min\":1000,\"max\":5000,\"step\":100,\"periods\":[3,6,12]}]",
+  "creditDate": 1643007539000,
+  "productModel": 1,
+  "remark": "审核通过",
+  "status": 6002
+}

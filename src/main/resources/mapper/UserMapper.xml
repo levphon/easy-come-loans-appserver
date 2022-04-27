@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.payu.app.modules.mapper.UserMapper">
+    <resultMap id="BaseResultMap" type="cn.com.payu.app.modules.entity.User">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="token" jdbcType="VARCHAR" property="token"/>
+        <result column="expire_in" jdbcType="INTEGER" property="expireIn"/>
+        <result column="try_times" jdbcType="INTEGER" property="tryTimes"/>
+        <result column="account" jdbcType="VARCHAR" property="account"/>
+        <result column="channel" jdbcType="VARCHAR" property="channel"/>
+        <result column="blacklist" jdbcType="TINYINT" property="blacklist"/>
+        <result column="from_app" jdbcType="TINYINT" property="fromApp"/>
+        <result column="del_flag" jdbcType="TINYINT" property="delFlag"/>
+        <result column="created_date" jdbcType="TIMESTAMP" property="createdDate"/>
+        <result column="created_by" jdbcType="INTEGER" property="createdBy"/>
+        <result column="updated_date" jdbcType="TIMESTAMP" property="updatedDate"/>
+        <result column="updated_by" jdbcType="INTEGER" property="updatedBy"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        id, token, expire_in, try_times, account, channel, blacklist, from_app, del_flag, created_date, created_by, updated_date,
+        updated_by
+    </sql>
+
+    <select id="selectById" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_cust_user
+        where id = #{id}
+        and del_flag = 0
+    </select>
+
+    <select id="selectByAccount" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_cust_user
+        where account = #{account}
+        and del_flag = 0
+        limit 1
+    </select>
+
+    <select id="selectByPhoneMd5" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_cust_user
+        where md5(account) = #{phoneMd5}
+        and del_flag = 0
+    </select>
+
+    <insert id="saveOrUpdate" useGeneratedKeys="true" keyProperty="id"
+            parameterType="cn.com.payu.app.modules.entity.User">
+        INSERT INTO t_cust_user (id, account, channel, blacklist, del_flag, created_date)
+        VALUES (#{id}, #{account}, #{channel}, 0, 0, sysdate()) ON DUPLICATE KEY
+        UPDATE updated_date = sysdate()
+    </insert>
+
+    <update id="logicDeleteById">
+        update t_cust_user
+        set del_flag = -1
+        where id = #{id}
+    </update>
+</mapper>

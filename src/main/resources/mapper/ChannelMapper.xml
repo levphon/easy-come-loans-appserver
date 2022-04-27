@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.payu.app.modules.mapper.ChannelMapper">
+    <resultMap id="BaseResultMap" type="cn.com.payu.app.modules.entity.Channel">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="channel" jdbcType="VARCHAR" property="channel"/>
+        <result column="channel_name" jdbcType="VARCHAR" property="channelName"/>
+        <result column="remark" jdbcType="VARCHAR" property="remark"/>
+        <result column="discount_rate" jdbcType="FLOAT" property="discountRate"/>
+        <result column="unit_price" jdbcType="DECIMAL" property="unitPrice"/>
+        <result column="enable_status" jdbcType="TINYINT" property="enableStatus"/>
+        <result column="del_flag" jdbcType="TINYINT" property="delFlag"/>
+        <result column="created_date" jdbcType="TIMESTAMP" property="createdDate"/>
+        <result column="created_by" jdbcType="INTEGER" property="createdBy"/>
+        <result column="updated_date" jdbcType="TIMESTAMP" property="updatedDate"/>
+        <result column="updated_by" jdbcType="INTEGER" property="updatedBy"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        id, channel, channel_name, remark, discount_rate, unit_price,
+        enable_status, del_flag, created_date, created_by, updated_date, updated_by
+    </sql>
+
+    <select id="selectById" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_channel
+        where del_flag = 0
+        and id = #{id}
+    </select>
+
+    <select id="selectByIds" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_channel
+        where del_flag = 0
+        and id in
+        <foreach collection="ids" separator="," open="(" close=")" item="id">
+            #{id}
+        </foreach>
+    </select>
+
+    <select id="search" resultType="cn.com.payu.app.modules.model.MngChannelDTO">
+        select tc.id,
+        tc.channel,
+        channel_name channelName,
+        remark,
+        enable_status enableStatus,
+        tc.created_date createdDate,
+        tc.discount_rate discountRate,
+        tc.unit_price unitPrice,
+        ifnull(tcu.rgCnt, 0) registerCnt,
+        ifnull(tcd.dlCnt, 0) downloadCnt
+        from t_channel tc
+        left join (
+        select channel, count(account) rgCnt from t_cust_user
+        where del_flag = 0
+        <if test="sDate != null and sDate != '' and eDate != null and eDate != ''">
+            and DATE_FORMAT(created_date, '%Y-%m-%d') &gt;= #{sDate}
+            and DATE_FORMAT(created_date, '%Y-%m-%d') &lt;= #{eDate}
+        </if>
+        group by channel
+        ) tcu
+        on tcu.channel = tc.channel
+        left join (
+        select channel, count(account) dlCnt from t_channel_download
+        where del_flag = 0
+        <if test="sDate != null and sDate != '' and eDate != null and eDate != ''">
+            and DATE_FORMAT(created_date, '%Y-%m-%d') &gt;= #{sDate}
+            and DATE_FORMAT(created_date, '%Y-%m-%d') &lt;= #{eDate}
+        </if>
+        group by channel
+        ) tcd
+        on tcd.channel = tc.channel
+        where tc.del_flag = 0
+        <if test="channelName != null and channelName != ''">
+            and tc.channel_name like CONCAT('%',#{channelName},'%')
+        </if>
+        <if test="channelIds != null and channelIds.size() > 0">
+            and tc.id in
+            <foreach collection="channelIds" index="index" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        order by tc.id desc
+    </select>
+
+    <select id="export" resultType="cn.com.payu.app.modules.model.export.MngChannelExport">
+        select tc.id,
+        tc.channel,
+        channel_name channelName,
+        remark,
+        tc.discount_rate discountRate,
+        tc.unit_price unitPrice,
+        case when enable_status=1 then '已上架' else '已下架' end enableStatus,
+        tc.created_date createdDate,
+        ifnull(tcu.rgCnt, 0) registerCnt,
+        ifnull(tcd.dlCnt, 0) downloadCnt
+        from t_channel tc
+        left join (select channel, count(account) rgCnt from t_cust_user group by channel) tcu
+        on tcu.channel = tc.channel
+        left join (select channel, count(account) dlCnt from t_channel_download group by channel) tcd
+        on tcd.channel = tc.channel
+        where tc.del_flag = 0
+        <if test="channelName != null and channelName != ''">
+            and tc.channel_name like CONCAT('%',#{channelName},'%')
+        </if>
+        <if test="sDate != null and sDate != '' and eDate != null and eDate != ''">
+            and DATE_FORMAT(tc.created_date, '%Y-%m-%d') &gt;= #{sDate}
+            and DATE_FORMAT(tc.created_date, '%Y-%m-%d') &lt;= #{eDate}
+        </if>
+        <if test="channelIds != null and channelIds.size() > 0">
+            and tc.id in
+            <foreach collection="channelIds" index="index" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        order by tc.id desc
+    </select>
+
+    <select id="selectSimpleList" resultType="cn.com.payu.app.modules.model.SimpleChannelDTO">
+        select id, channel, channel_name channelName
+        from t_channel
+    </select>
+
+    <select id="countByChannelCode" resultType="java.lang.Integer">
+        select count(*)
+        from t_channel
+        where del_flag = 0
+          and channel = #{channel}
+    </select>
+
+    <select id="selectByChannelCode" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_channel
+        where del_flag = 0
+        and channel = #{channel}
+        limit 1
+    </select>
+
+    <update id="updateEnableStatusById">
+        update t_channel
+        set enable_status = #{enableStatus}
+        where id = #{id}
+    </update>
+</mapper>

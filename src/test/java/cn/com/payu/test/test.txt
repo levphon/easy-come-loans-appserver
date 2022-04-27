@@ -1,0 +1,13 @@
+app_id=2016091654625569&
+biz_content=shike&
+charset=utf-8&
+method=alipay.trade.app.pay&
+notify_url=http%3A%2F%2F112.74.68.252%3A9200%2Fcssd%2Fapi%2Falipay_notify&
+out_trade_no=2019052456194799&
+product_code=QUICK_MSECURITY_PAY&
+sign_type=RSA2&
+subject=LV%E5%8C%85%E5%A5%B3%E6%80%A7%E5%A5%A2%E4%BE%88%E5%8C%85&
+timestamp=2019-05-24+16%3A32%3A27&
+total_amount=1770.0&
+version=1.0&
+sign=R5dwr0XAX42jocM86fIZFTIX5HzzE4U2xBvhU5qWo8hjAO%2F%2FNH4u3XF

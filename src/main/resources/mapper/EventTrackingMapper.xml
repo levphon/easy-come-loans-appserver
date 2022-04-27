@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.payu.app.modules.mapper.EventTrackingMapper">
+    <resultMap id="BaseResultMap" type="cn.com.payu.app.modules.entity.EventTracking">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="channel" jdbcType="VARCHAR" property="channel"/>
+        <result column="cuser_id" jdbcType="INTEGER" property="cuserId"/>
+        <result column="trigger_type" jdbcType="VARCHAR" property="triggerType"/>
+        <result column="page_url" jdbcType="VARCHAR" property="pageUrl"/>
+        <result column="url" jdbcType="VARCHAR" property="url"/>
+        <result column="entry_time" jdbcType="TIMESTAMP" property="entryTime"/>
+        <result column="leave_time" jdbcType="TIMESTAMP" property="leaveTime"/>
+        <result column="stay_time" jdbcType="INTEGER" property="stayTime"/>
+        <result column="del_flag" jdbcType="TINYINT" property="delFlag"/>
+        <result column="created_date" jdbcType="TIMESTAMP" property="createdDate"/>
+        <result column="created_by" jdbcType="INTEGER" property="createdBy"/>
+        <result column="updated_date" jdbcType="TIMESTAMP" property="updatedDate"/>
+        <result column="updated_by" jdbcType="INTEGER" property="updatedBy"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        id, channel, cuser_id, trigger_type, page_url, url, entry_time, leave_time, stay_time, del_flag,
+        created_date, created_by, updated_date, updated_by
+    </sql>
+
+    <select id="selectByChannel" resultType="cn.com.payu.app.modules.model.ChannelUniqueVisitor">
+        select tet.channel, date_format(tet.created_date, '%Y-%m-%d') statDate, tet.cuser_id cuserId
+        from t_event_tracking tet
+        where tet.del_flag = 0
+          and tet.channel = #{channel}
+          and DATE_FORMAT(tet.created_date, '%Y-%m-%d') &gt;= #{sDate}
+          and DATE_FORMAT(tet.created_date, '%Y-%m-%d') &lt;= #{eDate}
+        group by tet.channel, date_format(tet.created_date, '%Y-%m-%d'), tet.cuser_id
+    </select>
+</mapper>

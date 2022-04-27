@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.payu.app.modules.mapper.UserProfileMapper">
+    <resultMap id="BaseResultMap" type="cn.com.payu.app.modules.entity.UserProfile">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="user_id" jdbcType="INTEGER" property="userId"/>
+        <result column="real_name" jdbcType="VARCHAR" property="realName"/>
+        <result column="identity_no" jdbcType="VARCHAR" property="identityNo"/>
+        <result column="bank_name" jdbcType="VARCHAR" property="bankName"/>
+        <result column="bank_name_code" jdbcType="VARCHAR" property="bankNameCode"/>
+        <result column="bank_account" jdbcType="VARCHAR" property="bankAccount"/>
+        <result column="marital_status" jdbcType="VARCHAR" property="maritalStatus"/>
+        <result column="marital_status_code" jdbcType="VARCHAR" property="maritalStatusCode"/>
+        <result column="monthly_income" jdbcType="VARCHAR" property="monthlyIncome"/>
+        <result column="monthly_income_code" jdbcType="VARCHAR" property="monthlyIncomeCode"/>
+        <result column="assets" jdbcType="VARCHAR" property="assets"/>
+        <result column="education" jdbcType="VARCHAR" property="education"/>
+        <result column="education_code" jdbcType="VARCHAR" property="educationCode"/>
+        <result column="company" jdbcType="VARCHAR" property="company"/>
+        <result column="company_province" jdbcType="VARCHAR" property="companyProvince"/>
+        <result column="company_city" jdbcType="VARCHAR" property="companyCity"/>
+        <result column="company_address" jdbcType="VARCHAR" property="companyAddress"/>
+        <result column="company_industry" jdbcType="VARCHAR" property="companyIndustry"/>
+        <result column="company_industry_code" jdbcType="VARCHAR" property="companyIndustryCode"/>
+        <result column="company_tel" jdbcType="VARCHAR" property="companyTel"/>
+        <result column="position" jdbcType="VARCHAR" property="position"/>
+        <result column="position_code" jdbcType="VARCHAR" property="positionCode"/>
+        <result column="occupation" jdbcType="VARCHAR" property="occupation"/>
+        <result column="occupation_code" jdbcType="VARCHAR" property="occupationCode"/>
+        <result column="has_loans" jdbcType="VARCHAR" property="hasLoans"/>
+        <result column="loan_usage" jdbcType="VARCHAR" property="loanUsage"/>
+        <result column="loan_usage_code" jdbcType="VARCHAR" property="loanUsageCode"/>
+        <result column="loan_amount" jdbcType="DECIMAL" property="loanAmount"/>
+        <result column="loan_period" jdbcType="INTEGER" property="loanPeriod"/>
+        <result column="email" jdbcType="VARCHAR" property="email"/>
+        <result column="del_flag" jdbcType="TINYINT" property="delFlag"/>
+        <result column="created_date" jdbcType="TIMESTAMP" property="createdDate"/>
+        <result column="created_by" jdbcType="INTEGER" property="createdBy"/>
+        <result column="updated_date" jdbcType="TIMESTAMP" property="updatedDate"/>
+        <result column="updated_by" jdbcType="INTEGER" property="updatedBy"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        id, user_id, real_name, identity_no, bank_name, bank_name_code, bank_account, marital_status, marital_status_code,
+        monthly_income, monthly_income_code, assets, education, education_code, company, company_province, company_city, company_address,
+        company_industry, company_industry_code, company_tel,loan_amount,loan_period,
+        `position`, position_code, occupation, occupation_code, has_loans, loan_usage, loan_usage_code, email, del_flag, created_date, created_by,
+        updated_date, updated_by
+    </sql>
+
+    <select id="selectByUserId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_cust_user_profile
+        where user_id = #{userId}
+        and del_flag = 0
+    </select>
+
+    <update id="logicDeleteById">
+        update t_cust_user_profile
+        set del_flag = -1
+        where id = #{id}
+    </update>
+
+    <update id="logicDeleteByUserId">
+        update t_cust_user_profile
+        set del_flag = -1
+        where user_id = #{userId}
+    </update>
+
+    <select id="registerSearch" resultType="cn.com.payu.app.modules.model.CustUserRegisterListDTO">
+        select tcup.user_id userId,
+        tcup.real_name realName,
+        tcup.identity_no identityNo,
+        tcu.account mobile,
+        tcu.from_app fromApp,
+        tcup.bank_name bankName,
+        tcup.bank_account bankAccount,
+        tcup.loan_amount loanAmount,
+        tcup.loan_period as loanPeriod,
+        tcuv.status vipStatus,
+        tcuv.vipDays,
+        tcuv.vipExpireDays,
+        tcu.del_flag delFlag,
+        tcup.created_date registerDate
+        from t_cust_user_profile tcup
+        left join t_cust_user tcu on tcu.id = tcup.user_id
+        left join (select user_id, status, TIMESTAMPDIFF(DAY, effective_date, expiration_date) vipDays,TIMESTAMPDIFF(DAY, expiration_date, now()) vipExpireDays from
+        t_cust_user_vip)
+        tcuv
+        on tcuv.user_id = tcu.id
+        where 1=1
+        <if test="term != null and term !=''">
+            and (tcu.account like CONCAT('%',#{term},'%') or tcup.real_name like CONCAT('%',#{term},'%'))
+        </if>
+        <if test="status != null">
+            <choose>
+                <when test="status == 1">
+                    and tcuv.status in (1, 3) and vipExpireDays &lt;= 0 and vipDays &lt;= 31
+                </when>
+                <when test="status == 2">
+                    and tcuv.status in (1, 3) and vipExpireDays &lt;= 0 and vipDays >= 365
+                </when>
+                <when test="status == 3">
+                    and tcuv.status in (1, 3) and vipExpireDays &lt;= 0 and tcu.del_flag = -1
+                </when>
+            </choose>
+        </if>
+        <if test="fromApp != null">
+            and tcu.from_app = #{fromApp}
+        </if>
+        order by tcup.created_date desc
+    </select>
+
+    <select id="registerExport" resultType="cn.com.payu.app.modules.model.export.CustUserRegisterExport">
+        select tcup.user_id userId,
+        tcup.real_name realName,
+        tcup.identity_no identityNo,
+        tcu.account mobile,
+        tcu.from_app fromApp,
+        tcup.bank_name bankName,
+        tcup.bank_account bankAccount,
+        tcup.loan_amount loanAmount,
+        tcup.loan_period as loanPeriod,
+        tcuv.status vipStatus,
+        tcuv.vipDays,
+        tcuv.vipExpireDays,
+        tcu.del_flag delFlag,
+        tcup.created_date registerDate
+        from t_cust_user_profile tcup
+        left join t_cust_user tcu on tcu.id = tcup.user_id
+        left join (select user_id, status, TIMESTAMPDIFF(DAY, effective_date, expiration_date) vipDays,TIMESTAMPDIFF(DAY, expiration_date, now()) vipExpireDays from
+        t_cust_user_vip)
+        tcuv on tcuv.user_id = tcu.id
+        where 1=1
+        <if test="term != null and term !=''">
+            and (tcu.account like CONCAT('%',#{term},'%') or tcup.real_name like CONCAT('%',#{term},'%'))
+        </if>
+        <if test="status != null">
+            <choose>
+                <when test="status == 1">
+                    and tcuv.status in (1, 3) and vipExpireDays &lt;= 0 and vipDays &lt;= 31
+                </when>
+                <when test="status == 2">
+                    and tcuv.status in (1, 3) and vipExpireDays &lt;= 0 and vipDays >= 365
+                </when>
+                <when test="status == 3">
+                    and tcuv.status in (1, 3) and vipExpireDays &lt;= 0 and tcu.del_flag = -1
+                </when>
+            </choose>
+        </if>
+        <if test="fromApp != null">
+            and tcu.from_app = #{fromApp}
+        </if>
+        order by tcup.created_date desc
+    </select>
+
+</mapper>

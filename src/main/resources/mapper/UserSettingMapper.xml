@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.payu.app.modules.mapper.UserSettingMapper">
+    <resultMap id="BaseResultMap" type="cn.com.payu.app.modules.entity.UserSetting">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="user_id" jdbcType="INTEGER" property="userId"/>
+        <result column="setting_id" jdbcType="INTEGER" property="settingId"/>
+        <result column="item_val" jdbcType="TINYINT" property="itemValue"/>
+        <result column="del_flag" jdbcType="TINYINT" property="delFlag"/>
+        <result column="created_date" jdbcType="TIMESTAMP" property="createdDate"/>
+        <result column="created_by" jdbcType="INTEGER" property="createdBy"/>
+        <result column="updated_date" jdbcType="TIMESTAMP" property="updatedDate"/>
+        <result column="updated_by" jdbcType="INTEGER" property="updatedBy"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        id, user_id, setting_id, item_val, del_flag, created_date, created_by, updated_date, updated_by
+    </sql>
+
+    <select id="selectById" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_cust_user_setting
+        where del_flag = 0
+        and id = #{id}
+    </select>
+
+    <select id="selectByUserIdAndSettingId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_cust_user_setting
+        where del_flag = 0
+        and user_id = #{userId}
+        and setting_id = #{settingId}
+    </select>
+
+    <insert id="saveOrUpdate" parameterType="cn.com.payu.app.modules.entity.UserSetting">
+        INSERT INTO t_cust_user_setting (id, user_id, setting_id, item_val, del_flag, created_date)
+        VALUES (#{id}, #{userId}, #{settingId}, 0, 0, sysdate()) ON DUPLICATE KEY
+        UPDATE
+            item_val = #{itemVal,jdbcType=TINYINT},
+            updated_date = sysdate()
+    </insert>
+</mapper>

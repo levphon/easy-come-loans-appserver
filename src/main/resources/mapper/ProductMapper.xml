@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.payu.app.modules.mapper.ProductMapper">
+    <resultMap id="BaseResultMap" type="cn.com.payu.app.modules.entity.Product">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="channel" jdbcType="VARCHAR" property="channel"/>
+        <result column="logo" jdbcType="VARCHAR" property="logo"/>
+        <result column="tags" jdbcType="VARCHAR" property="tags"/>
+        <result column="max_amount" jdbcType="DECIMAL" property="maxAmount"/>
+        <result column="day_interest_rate" jdbcType="FLOAT" property="dayInterestRate"/>
+        <result column="periods" jdbcType="INTEGER" property="periods"/>
+        <result column="unit_price" jdbcType="DECIMAL" property="unitPrice"/>
+        <result column="used_cnt" jdbcType="INTEGER" property="usedCnt"/>
+        <result column="url" jdbcType="VARCHAR" property="url"/>
+        <result column="type" jdbcType="TINYINT" property="type"/>
+        <result column="remark" jdbcType="VARCHAR" property="remark"/>
+        <result column="order_num" jdbcType="TINYINT" property="orderNum"/>
+        <result column="enable_status" jdbcType="TINYINT" property="enableStatus"/>
+        <result column="position" jdbcType="TINYINT" property="position"/>
+        <result column="shelf_time" jdbcType="VARCHAR" property="shelfTime"/>
+        <result column="off_shelf_time" jdbcType="VARCHAR" property="offShelfTime"/>
+        <result column="max_daily_uv" jdbcType="INTEGER" property="maxDailyUV"/>
+        <result column="max_total_uv" jdbcType="INTEGER" property="maxTotalUV"/>
+        <result column="del_flag" jdbcType="TINYINT" property="delFlag"/>
+        <result column="created_date" jdbcType="TIMESTAMP" property="createdDate"/>
+        <result column="created_by" jdbcType="INTEGER" property="createdBy"/>
+        <result column="updated_date" jdbcType="TIMESTAMP" property="updatedDate"/>
+        <result column="updated_by" jdbcType="INTEGER" property="updatedBy"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        id, channel, name, logo, tags, max_amount, day_interest_rate, used_cnt, url, type, remark, order_num,
+        periods, shelf_time, off_shelf_time, max_daily_uv, max_total_uv, position, unit_price,
+        enable_status, del_flag, created_date, created_by, updated_date, updated_by
+    </sql>
+
+    <select id="selectById" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_product
+        where del_flag = 0
+        and id = #{id}
+    </select>
+
+    <select id="selectUsable" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_product
+        where del_flag = 0
+        and enable_status = 1
+        order by type desc, order_num asc
+    </select>
+
+    <select id="search" resultType="cn.com.payu.app.modules.model.MngProductDTO">
+        select tp.id,
+        name productName,
+        periods,
+        tp.unit_price unitPrice,
+        day_interest_rate dayInterestRate,
+        max_amount maxAmount,
+        type,
+        remark,
+        order_num orderNum,
+        enable_status enableStatus,
+        tp.created_date createdDate,
+        tpd.clickCnt
+        from t_product tp
+        left join (select product_id, count(user_id) clickCnt
+        from t_product_drainage itpd
+        where itpd.del_flag = 0
+        <if test="sDate != null and sDate != '' and eDate != null and eDate != ''">
+            and DATE_FORMAT(itpd.created_date, '%Y-%m-%d') &gt;= #{sDate}
+            and DATE_FORMAT(itpd.created_date, '%Y-%m-%d') &lt;= #{eDate}
+        </if>
+        group by product_id) tpd
+        on tpd.product_id = tp.id
+        where tp.del_flag = 0
+        <if test="productName != null and productName != ''">
+            and tp.name like CONCAT('%',#{productName},'%')
+        </if>
+        <if test="enableStatus != null">
+            and tp.enable_status = #{enableStatus}
+        </if>
+        order by tp.order_num
+    </select>
+
+    <select id="export" resultType="cn.com.payu.app.modules.model.export.MngProductExport">
+        select tp.id,
+        name productName,
+        periods,
+        day_interest_rate dayInterestRate,
+        max_amount maxAmount,
+        type,
+        tp.tags,
+        remark,
+        order_num orderNum,
+        case when enable_status=1 then '已上架' else '已下架' end enableStatus,
+        tp.created_date createdDate,
+        tpd.clickCnt
+        from t_product tp
+        left join (select product_id, count(user_id) clickCnt from t_product_drainage group by product_id) tpd
+        on tpd.product_id = tp.id
+        where tp.del_flag = 0
+        <if test="productName != null and productName != ''">
+            and tp.name like CONCAT('%',#{productName},'%')
+        </if>
+        <if test="enableStatus != null">
+            and tp.enable_status = #{enableStatus}
+        </if>
+        <if test="sDate != null and sDate != '' and eDate != null and eDate != ''">
+            and DATE_FORMAT(tp.created_date, '%Y-%m-%d') &gt;= #{sDate}
+            and DATE_FORMAT(tp.created_date, '%Y-%m-%d') &lt;= #{eDate}
+        </if>
+        order by tp.order_num
+    </select>
+
+    <select id="countByName" resultType="java.lang.Integer">
+        select count(*)
+        from t_product
+        where del_flag = 0
+          and name = #{name}
+    </select>
+
+    <select id="selectByName" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_product
+        where del_flag = 0
+        and name = #{name}
+        limit 1
+    </select>
+
+    <update id="updateEnableStatusById">
+        update t_product
+        set enable_status = #{enableStatus}
+        where id = #{id}
+    </update>
+
+    <update id="increaseUsedCntById">
+        update t_product
+        set used_cnt = used_cnt + 1
+        where id = #{id}
+    </update>
+</mapper>

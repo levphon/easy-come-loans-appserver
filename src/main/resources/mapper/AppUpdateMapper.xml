@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.payu.app.modules.mapper.AppUpdateMapper">
+    <resultMap id="BaseResultMap" type="cn.com.payu.app.modules.entity.AppUpdate">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="version" jdbcType="VARCHAR" property="version"/>
+        <result column="update" jdbcType="BIT" property="update"/>
+        <result column="wgt_url" jdbcType="VARCHAR" property="wgtUrl"/>
+        <result column="pkg_url" jdbcType="VARCHAR" property="pkgUrl"/>
+        <result column="del_flag" jdbcType="TINYINT" property="delFlag"/>
+        <result column="remark" jdbcType="VARCHAR" property="remark"/>
+        <result column="created_date" jdbcType="TIMESTAMP" property="createdDate"/>
+        <result column="created_by" jdbcType="INTEGER" property="createdBy"/>
+        <result column="updated_date" jdbcType="TIMESTAMP" property="updatedDate"/>
+        <result column="updated_by" jdbcType="INTEGER" property="updatedBy"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        id, `name`, version, `update`, wgt_url, pkg_url, remark, del_flag, created_date, created_by,
+        updated_date, updated_by
+    </sql>
+
+    <select id="selectByName" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_app_update
+        where del_flag = 0
+        and name = #{name}
+    </select>
+</mapper>

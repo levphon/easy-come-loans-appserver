@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.payu.app.modules.mapper.ChannelDownloadMapper">
+    <resultMap id="BaseResultMap" type="cn.com.payu.app.modules.entity.ChannelDownload">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="channel" jdbcType="VARCHAR" property="channel"/>
+        <result column="platform" jdbcType="VARCHAR" property="platform"/>
+        <result column="account" jdbcType="VARCHAR" property="account"/>
+        <result column="decrypt_account" jdbcType="VARCHAR" property="decryptAccount"/>
+        <result column="status" jdbcType="INTEGER" property="status"/>
+        <result column="del_flag" jdbcType="TINYINT" property="delFlag"/>
+        <result column="created_date" jdbcType="TIMESTAMP" property="createdDate"/>
+        <result column="created_by" jdbcType="INTEGER" property="createdBy"/>
+        <result column="updated_date" jdbcType="TIMESTAMP" property="updatedDate"/>
+        <result column="updated_by" jdbcType="INTEGER" property="updatedBy"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        id, channel, platform, account, `status`, del_flag, created_date, created_by, updated_date,
+        updated_by
+    </sql>
+
+    <select id="countByChannelAndAccount" resultType="java.lang.Integer">
+        select count(id)
+        from t_channel_download
+        where channel = #{channel}
+          and account = #{account}
+          and platform = #{platform}
+    </select>
+
+    <select id="selectEncryptAccount" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_channel_download
+        where length(account) > 11
+        and decrypt_account is null
+    </select>
+
+    <select id="selectDownloadUser" resultType="cn.com.payu.app.modules.model.ChannelDownloadUserDTO">
+        select tcd.id,
+               tcd.channel,
+               tcd.platform,
+               tcd.account,
+               tcup.real_name   realName,
+               tcup.identity_no identityNo
+        from t_channel_download tcd
+                 left join t_cust_user tcu on tcu.account = tcd.account
+                 left join t_cust_user_profile tcup on tcup.user_id = tcu.id
+        where tcd.platform is not null
+    </select>
+
+    <update id="updateDecryptAccount">
+        update t_channel_download
+        set decrypt_account = #{decryptAccount}
+        where id = #{id}
+    </update>
+</mapper>

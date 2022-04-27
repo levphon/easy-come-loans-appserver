@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.payu.app.modules.mapper.PaymentConfigMapper">
+    <resultMap id="BaseResultMap" type="cn.com.payu.app.modules.entity.PaymentConfig">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="app_id" jdbcType="VARCHAR" property="appId"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="company" jdbcType="VARCHAR" property="company"/>
+        <result column="pay_cnt" jdbcType="INTEGER" property="payCnt"/>
+        <result column="status" jdbcType="TINYINT" property="status"/>
+        <result column="del_flag" jdbcType="TINYINT" property="delFlag"/>
+        <result column="created_date" jdbcType="TIMESTAMP" property="createdDate"/>
+        <result column="created_by" jdbcType="INTEGER" property="createdBy"/>
+        <result column="updated_date" jdbcType="TIMESTAMP" property="updatedDate"/>
+        <result column="updated_by" jdbcType="INTEGER" property="updatedBy"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        id, app_id, `name`, company, pay_cnt, `status`, del_flag, created_date, created_by,
+        updated_date, updated_by
+    </sql>
+
+    <select id="selectByAppId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_payment_config
+        where del_flag = 0
+        and app_id = #{appId}
+    </select>
+
+    <select id="selectAllConfig" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_payment_config
+        where del_flag = 0
+    </select>
+
+    <select id="selectUsedConfig" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_payment_config
+        where del_flag = 0
+        and status = 1
+        limit 1
+    </select>
+
+    <select id="search" resultType="cn.com.payu.app.modules.model.MngPaymentDTO">
+        select id, app_id appId, name, company, pay_cnt payCnt, status, created_date createdDate
+        from t_payment_config tpc
+    </select>
+
+    <update id="updateUnusedStatus">
+        update t_payment_config
+        set status = #{status}
+        where status = 1
+    </update>
+
+    <update id="updateUsedStatusById">
+        update t_payment_config
+        set status = #{status}
+        where id = #{id}
+    </update>
+
+    <update id="updatePayCntByAppId">
+        update t_payment_config
+        set pay_cnt      = #{payCnt},
+            updated_date = sysdate()
+        where app_id = #{appId}
+    </update>
+</mapper>
