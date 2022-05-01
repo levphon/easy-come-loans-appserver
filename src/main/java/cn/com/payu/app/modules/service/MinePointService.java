@@ -19,8 +19,8 @@ public class MinePointService {
 
     public void upv(PageViewBO pageViewBO) {
         EventTracking tracking = new EventTracking();
-        tracking.setChannel(AppContextHolder.getChannel());
-        tracking.setCuserId(AppContextHolder.getUserId());
+//        tracking.setChannel(AppContextHolder.getChannel());
+//        tracking.setCuserId(AppContextHolder.getUserId());
         tracking.setTriggerType(pageViewBO.getTriggerType());
         tracking.setPageUrl(pageViewBO.getPageInfo().getPageUrl());
         tracking.setUrl(pageViewBO.getPageInfo().getUrl());

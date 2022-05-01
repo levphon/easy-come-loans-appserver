@@ -56,6 +56,7 @@ public class WebConfig implements WebMvcConfigurer {
         excludePathPatterns.add("/bind");
         excludePathPatterns.add("/xactuator/**");
         excludePathPatterns.add("/api/**");
+        excludePathPatterns.add("/minepoint/upv");
         excludePathPatterns.add("/mng/captcha");
         excludePathPatterns.add("/mng/login");
         excludePathPatterns.add("/payment/callback/**");
