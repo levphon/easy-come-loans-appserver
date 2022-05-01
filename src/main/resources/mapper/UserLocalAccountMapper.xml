@@ -51,7 +51,6 @@
                tcula.avatar,
                tcu.blacklist,
                tcu.channel,
-               tcu.from_app   fromApp,
                tcup.id        profileId
         from t_cust_user tcu
                  left join t_cust_user_local_account tcula on tcu.id = tcula.user_id

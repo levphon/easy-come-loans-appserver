@@ -34,11 +34,8 @@ public class CommonController {
     @NoLogin
     @ApiOperation(value = "发送短信验证码接口")
     @GetMapping(value = "/common/sendCode")
-    public R sendCode(@RequestParam("mobile") @Validated @NotBlank(message = "手机号码不能为空") String mobile, Integer fromApp) {
-        if (fromApp == null) {
-            fromApp = 1;
-        }
-        String code = smsService.sendCode(mobile, fromApp);
+    public R sendCode(@RequestParam("mobile") @Validated @NotBlank(message = "手机号码不能为空") String mobile) {
+        String code = smsService.sendCode(mobile);
         return R.ok().data(code);
     }
 

@@ -62,9 +62,9 @@ public class SmsService {
      *
      * @param mobile
      */
-    public String sendCode(String mobile, Integer fromApp) {
+    public String sendCode(String mobile) {
         //校验发送
-        checkSend(mobile, fromApp);
+        checkSend(mobile);
 
         String phoneKey = application + "." + mobile;
         String code = StringUtils.generateRandomCode(true, 6);
@@ -119,9 +119,9 @@ public class SmsService {
         log.info("Sms send result:{}", result);
     }
 
-    public void checkSend(String mobile, Integer fromApp) {
+    public void checkSend(String mobile) {
         //1、黑名单用户无法发短信
-        User user = userMapper.selectByAccount(mobile, fromApp);
+        User user = userMapper.selectByAccount(mobile);
         boolean blacklist = user != null && user.getBlacklist() == 2;
         if (blacklist) {
             throw BusinessException.create("发送失败，请联系客服人员");

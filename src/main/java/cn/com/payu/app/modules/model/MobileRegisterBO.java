@@ -23,9 +23,4 @@ public class MobileRegisterBO {
     private String imei;
     private String channel;
 
-    /**
-     * 来自app：1：默认橙色 2：绿色 3：黑色 4：蓝色
-     */
-    private Integer fromApp;
-
 }

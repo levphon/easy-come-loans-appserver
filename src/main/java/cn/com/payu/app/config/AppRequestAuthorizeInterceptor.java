@@ -2,7 +2,6 @@ package cn.com.payu.app.config;
 
 import cn.com.payu.app.modules.model.AppUser;
 import cn.com.payu.app.modules.service.UserService;
-import cn.com.payu.app.modules.service.VipService;
 import cn.com.payu.app.modules.utils.AppContextHolder;
 import com.alibaba.fastjson.JSON;
 import com.glsx.plat.common.utils.ObjectUtils;
@@ -13,7 +12,6 @@ import com.glsx.plat.jwt.base.ComJwtUser;
 import com.glsx.plat.jwt.util.JwtUtils;
 import com.glsx.plat.web.utils.IpUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
@@ -42,9 +40,6 @@ public class AppRequestAuthorizeInterceptor implements HandlerInterceptor {
 
     @Resource
     private UserService userService;
-
-    @Autowired
-    private VipService vipService;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -85,14 +80,6 @@ public class AppRequestAuthorizeInterceptor implements HandlerInterceptor {
                 blacklist(response);
                 return false;
             }
-
-            boolean vipFlag = vipService.isValidVip(user.getId());
-            //如果用户修改了手机号码，必须重新登录
-//            if (user.getAccount().equals(jwtUser.getAccount())) {
-//                needLogin(response);
-//                return false;
-//            }
-            user.setIsVip(vipFlag);
             AppContextHolder.setUser(user);
             return true;
         }

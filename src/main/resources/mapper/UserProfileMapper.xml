@@ -12,13 +12,37 @@
         <result column="bank_name" jdbcType="VARCHAR" property="bankName"/>
         <result column="bank_name_code" jdbcType="VARCHAR" property="bankNameCode"/>
         <result column="bank_account" jdbcType="VARCHAR" property="bankAccount"/>
-        <result column="marital_status" jdbcType="VARCHAR" property="maritalStatus"/>
-        <result column="marital_status_code" jdbcType="VARCHAR" property="maritalStatusCode"/>
-        <result column="monthly_income" jdbcType="VARCHAR" property="monthlyIncome"/>
-        <result column="monthly_income_code" jdbcType="VARCHAR" property="monthlyIncomeCode"/>
-        <result column="assets" jdbcType="VARCHAR" property="assets"/>
+        <result column="province" jdbcType="VARCHAR" property="province"/>
+        <result column="province_code" jdbcType="VARCHAR" property="provinceCode"/>
+        <result column="city" jdbcType="VARCHAR" property="city"/>
+        <result column="city_code" jdbcType="VARCHAR" property="cityCode"/>
+        <result column="address" jdbcType="VARCHAR" property="address"/>
+        <result column="loan_limit" jdbcType="VARCHAR" property="loanLimit"/>
+        <result column="loan_month" jdbcType="VARCHAR" property="loanMonth"/>
         <result column="education" jdbcType="VARCHAR" property="education"/>
         <result column="education_code" jdbcType="VARCHAR" property="educationCode"/>
+        <result column="loan_usage" jdbcType="VARCHAR" property="loanUsage"/>
+        <result column="loan_usage_code" jdbcType="VARCHAR" property="loanUsageCode"/>
+        <result column="sesame_score" jdbcType="VARCHAR" property="sesameScore"/>
+        <result column="particle_loan" jdbcType="VARCHAR" property="particleLoan"/>
+        <result column="jd_white_note" jdbcType="VARCHAR" property="jdWhiteNote"/>
+        <result column="ant_spend" jdbcType="VARCHAR" property="antSpend"/>
+        <result column="occupation" jdbcType="VARCHAR" property="occupation"/>
+        <result column="occupation_code" jdbcType="VARCHAR" property="occupationCode"/>
+        <result column="work_month" jdbcType="VARCHAR" property="workMonth"/>
+        <result column="social_security" jdbcType="VARCHAR" property="socialSecurity"/>
+        <result column="accumulation_fund" jdbcType="VARCHAR" property="accumulationFund"/>
+        <result column="commercial_insurance" jdbcType="VARCHAR" property="commercialInsurance"/>
+        <result column="house_assets" jdbcType="VARCHAR" property="houseAssets"/>
+        <result column="vehicle_assets" jdbcType="VARCHAR" property="vehicleAssets"/>
+        <result column="monthly_income" jdbcType="VARCHAR" property="monthlyIncome"/>
+        <result column="monthly_income_code" jdbcType="VARCHAR" property="monthlyIncomeCode"/>
+        <result column="salary_payment" jdbcType="VARCHAR" property="salaryPayment"/>
+        <result column="credit_situation" jdbcType="VARCHAR" property="creditSituation"/>
+        <result column="credit_card_amount" jdbcType="VARCHAR" property="creditCardAmount"/>
+        <result column="marital_status" jdbcType="VARCHAR" property="maritalStatus"/>
+        <result column="marital_status_code" jdbcType="VARCHAR" property="maritalStatusCode"/>
+        <result column="email" jdbcType="VARCHAR" property="email"/>
         <result column="company" jdbcType="VARCHAR" property="company"/>
         <result column="company_province" jdbcType="VARCHAR" property="companyProvince"/>
         <result column="company_city" jdbcType="VARCHAR" property="companyCity"/>
@@ -28,14 +52,9 @@
         <result column="company_tel" jdbcType="VARCHAR" property="companyTel"/>
         <result column="position" jdbcType="VARCHAR" property="position"/>
         <result column="position_code" jdbcType="VARCHAR" property="positionCode"/>
-        <result column="occupation" jdbcType="VARCHAR" property="occupation"/>
-        <result column="occupation_code" jdbcType="VARCHAR" property="occupationCode"/>
-        <result column="has_loans" jdbcType="VARCHAR" property="hasLoans"/>
-        <result column="loan_usage" jdbcType="VARCHAR" property="loanUsage"/>
-        <result column="loan_usage_code" jdbcType="VARCHAR" property="loanUsageCode"/>
         <result column="loan_amount" jdbcType="DECIMAL" property="loanAmount"/>
         <result column="loan_period" jdbcType="INTEGER" property="loanPeriod"/>
-        <result column="email" jdbcType="VARCHAR" property="email"/>
+        <result column="loan_method" jdbcType="VARCHAR" property="loanMethod"/>
         <result column="del_flag" jdbcType="TINYINT" property="delFlag"/>
         <result column="created_date" jdbcType="TIMESTAMP" property="createdDate"/>
         <result column="created_by" jdbcType="INTEGER" property="createdBy"/>
@@ -46,11 +65,15 @@
         <!--
           WARNING - @mbg.generated
         -->
-        id, user_id, real_name, identity_no, bank_name, bank_name_code, bank_account, marital_status, marital_status_code,
-        monthly_income, monthly_income_code, assets, education, education_code, company, company_province, company_city, company_address,
-        company_industry, company_industry_code, company_tel,loan_amount,loan_period,
-        `position`, position_code, occupation, occupation_code, has_loans, loan_usage, loan_usage_code, email, del_flag, created_date, created_by,
-        updated_date, updated_by
+        id, user_id, real_name, identity_no, bank_name, bank_name_code, bank_account, province,
+        province_code, city, city_code, address, loan_limit, loan_month, education, education_code,
+        loan_usage, loan_usage_code, sesame_score, particle_loan, jd_white_note, ant_spend,
+        occupation, occupation_code, work_month, social_security, accumulation_fund, commercial_insurance,
+        house_assets, vehicle_assets, monthly_income, monthly_income_code, salary_payment,
+        credit_situation, credit_card_amount, marital_status, marital_status_code, email,
+        company, company_province, company_city, company_address, company_industry, company_industry_code,
+        company_tel, `position`, position_code, loan_amount, loan_period, loan_method, del_flag,
+        created_date, created_by, updated_date, updated_by
     </sql>
 
     <select id="selectByUserId" resultMap="BaseResultMap">
@@ -78,7 +101,6 @@
         tcup.real_name realName,
         tcup.identity_no identityNo,
         tcu.account mobile,
-        tcu.from_app fromApp,
         tcup.bank_name bankName,
         tcup.bank_account bankAccount,
         tcup.loan_amount loanAmount,
@@ -111,9 +133,6 @@
                 </when>
             </choose>
         </if>
-        <if test="fromApp != null">
-            and tcu.from_app = #{fromApp}
-        </if>
         order by tcup.created_date desc
     </select>
 
@@ -122,7 +141,6 @@
         tcup.real_name realName,
         tcup.identity_no identityNo,
         tcu.account mobile,
-        tcu.from_app fromApp,
         tcup.bank_name bankName,
         tcup.bank_account bankAccount,
         tcup.loan_amount loanAmount,
@@ -153,9 +171,6 @@
                     and tcuv.status in (1, 3) and vipExpireDays &lt;= 0 and tcu.del_flag = -1
                 </when>
             </choose>
-        </if>
-        <if test="fromApp != null">
-            and tcu.from_app = #{fromApp}
         </if>
         order by tcup.created_date desc
     </select>

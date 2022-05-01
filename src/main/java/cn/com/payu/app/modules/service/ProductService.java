@@ -6,15 +6,8 @@ import cn.com.payu.app.modules.entity.Product;
 import cn.com.payu.app.modules.entity.ProductDrainage;
 import cn.com.payu.app.modules.mapper.ProductDrainageMapper;
 import cn.com.payu.app.modules.mapper.ProductMapper;
-import cn.com.payu.app.modules.model.*;
-import cn.com.payu.app.modules.model.export.MngProductExport;
-import cn.com.payu.app.modules.model.params.MngProductSettingBO;
-import cn.com.payu.app.modules.model.params.ProductSearch;
+import cn.com.payu.app.modules.model.ProductDTO;
 import cn.com.payu.app.modules.utils.AppContextHolder;
-import com.github.pagehelper.Page;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
-import com.glsx.plat.core.enums.SysConstants;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -22,7 +15,6 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
 @Slf4j
 @Service
@@ -59,7 +51,7 @@ public class ProductService {
             throw new AppServerException("借款渠道不存在或已下架");
         }
 
-        if (!AppContextHolder.isVip() && product.getType() == 1) {
+        if (product.getType() == 1) {
             throw new AppServerException("先去开通会员吧，更高额度及各种权益等着您！");
         }
 
@@ -75,7 +67,6 @@ public class ProductService {
 
         return product.getUrl();
     }
-
 
 
 }

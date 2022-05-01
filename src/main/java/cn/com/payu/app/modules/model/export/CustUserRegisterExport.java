@@ -54,7 +54,4 @@ public class CustUserRegisterExport {
     @ExcelIgnore
     private Integer delFlag;
 
-    @ExcelProperty(value = "APP", index = 9)
-    private String fromApp;
-
 }

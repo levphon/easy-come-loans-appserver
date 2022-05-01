@@ -39,19 +39,14 @@ public class AppContextHolder {
         return user.getUnionId();
     }
 
-    public static boolean isVip() {
+    public static String getAccount() {
         AppUser user = getUser();
-        return user.getIsVip();
+        return user.getAccount();
     }
 
     public static String getChannel() {
         AppUser user = getUser();
         return user.getChannel();
-    }
-
-    public static Integer getFromApp() {
-        AppUser user = getUser();
-        return user.getFromApp();
     }
 
 }

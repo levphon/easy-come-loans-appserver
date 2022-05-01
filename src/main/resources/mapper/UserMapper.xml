@@ -12,7 +12,6 @@
         <result column="account" jdbcType="VARCHAR" property="account"/>
         <result column="channel" jdbcType="VARCHAR" property="channel"/>
         <result column="blacklist" jdbcType="TINYINT" property="blacklist"/>
-        <result column="from_app" jdbcType="TINYINT" property="fromApp"/>
         <result column="del_flag" jdbcType="TINYINT" property="delFlag"/>
         <result column="created_date" jdbcType="TIMESTAMP" property="createdDate"/>
         <result column="created_by" jdbcType="INTEGER" property="createdBy"/>

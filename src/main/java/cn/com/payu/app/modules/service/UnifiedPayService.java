@@ -5,9 +5,7 @@ import cn.com.payu.app.common.exception.AppServerException;
 import cn.com.payu.app.config.AlipayConfig;
 import cn.com.payu.app.config.AlipayConfigBak1;
 import cn.com.payu.app.modules.converter.PaymentConfigConverter;
-import cn.com.payu.app.modules.entity.Order;
 import cn.com.payu.app.modules.entity.PaymentConfig;
-import cn.com.payu.app.modules.mapper.OrderMapper;
 import cn.com.payu.app.modules.mapper.PaymentConfigMapper;
 import cn.com.payu.app.modules.model.AlipayConfigModel;
 import cn.com.payu.app.modules.model.UnifiedPayModel;
@@ -63,15 +61,6 @@ public class UnifiedPayService {
 
     @Resource
     private PaymentConfigMapper paymentConfigMapper;
-
-    @Resource
-    private OrderMapper orderMapper;
-
-    @Autowired
-    private OrderService orderService;
-
-    @Autowired
-    private LeChargeBizService leChargeBizService;
 
     /**
      * 预支付请求
@@ -170,9 +159,9 @@ public class UnifiedPayService {
             //分转化成元
             String totalFee = BaseWxPayResult.fenToYuan(result.getTotalFee());
 
-            // 更新订单信息
+            //todo 更新订单信息
             //2020/12/28 充值成功，分润处理，更新钱包余额
-            orderService.completeCharge(outTradeNo, result.getAppid());
+
             log.info("订单{}支付成功", outTradeNo);
         }
     }
@@ -284,28 +273,12 @@ public class UnifiedPayService {
         if ("TRADE_SUCCESS".equals(tradeStatus)) {
             // 更新订单信息
             // 2020/12/28 充值成功，分润处理，更新钱包余额
-            // 更新订单状态
-            orderService.completeCharge(orderNo, appId);
+            // todo 更新订单状态
             log.info("订单{}支付成功，支付AppId {}", orderNo, appId);
 
             return "success";
         }
         return "failure";
-    }
-
-    /**
-     * 更新乐充订单处理结果
-     *
-     * @param orderNo
-     * @param state
-     */
-    public void updateLeChargeOrder(String orderNo, String state) {
-        Order order = orderMapper.selectByOrderNo(orderNo);
-        if (order == null) {
-            log.warn("订单{}已经不存在", orderNo);
-            return;
-        }
-        leChargeBizService.finishedCharge(order, state);
     }
 
 }

@@ -42,10 +42,4 @@ public class User extends BaseEntity {
      */
     private Integer blacklist;
 
-    /**
-     * 来自app：1：默认橙色 2：绿色 3：黑色 4：蓝色
-     */
-    @Column(name = "from_app")
-    private Integer fromApp;
-
 }

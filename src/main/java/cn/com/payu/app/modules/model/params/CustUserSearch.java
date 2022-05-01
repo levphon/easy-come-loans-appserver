@@ -10,8 +10,6 @@ public class CustUserSearch extends Page {
     private String sDate;
     private String eDate;
 
-    private Integer fromApp;
-
     private String channel;
 
     private String term;

@@ -24,12 +24,4 @@ public class LoginByMobileBO {
     //@NotBlank(message = "验证码/密码不能为空")
     private String code;
 
-    //@NotNull(message = "APP客户端ID不能为空")
-//    private String clientId;
-
-    /**
-     * 来自app：1：默认橙色 2：绿色 3：黑色 4：蓝色
-     */
-    private Integer fromApp;
-
 }

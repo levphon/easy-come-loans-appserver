@@ -13,9 +13,6 @@ public class AppUser {
     private String avatar;
     private Integer blacklist;
     private String channel;
-    private Integer fromApp;
-
-    private Boolean isVip;
 
     @JsonIgnore
     private Long profileId;

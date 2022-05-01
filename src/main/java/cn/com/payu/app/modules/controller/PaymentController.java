@@ -121,7 +121,7 @@ public class PaymentController {
         log.info("乐购签名 {}", sign);
         log.info("本地签名 {}", checkSign);
         if (sign.equalsIgnoreCase(checkSign)) {
-            unifiedPayService.updateLeChargeOrder(sellerid, state);
+            // TODO: 2022/5/1 更新充值订单状态
             return "ok";
         } else {
             log.error("签名失败");

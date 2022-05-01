@@ -1,12 +1,9 @@
 package cn.com.payu.app.modules.controller;
 
 import cn.com.payu.app.modules.converter.UserConverter;
-import cn.com.payu.app.modules.converter.UserVipConverter;
-import cn.com.payu.app.modules.entity.UserVip;
 import cn.com.payu.app.modules.model.*;
 import cn.com.payu.app.modules.model.params.BindBankCardBO;
 import cn.com.payu.app.modules.service.UserService;
-import cn.com.payu.app.modules.service.VipService;
 import cn.com.payu.app.modules.utils.AppContextHolder;
 import cn.hutool.json.JSONUtil;
 import com.glsx.plat.common.annotation.SysLog;
@@ -33,9 +30,6 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private VipService vipService;
-
     @SysLog
     @ApiOperation(value = "资料提交接口")
     @PostMapping(value = "/fillProfile")
@@ -53,32 +47,17 @@ public class UserController {
         return R.ok().data(individualPage);
     }
 
-    @ApiOperation(value = "查询用户是否会员接口")
-    @GetMapping(value = "/isvip")
-    public R isVip() {
-        UserVip userVip = vipService.getUserVipInfo(AppContextHolder.getUserId());
-        UserVipDTO userVipDTO = UserVipConverter.INSTANCE.do2dto(userVip);
-        boolean isVip = (userVipDTO != null && (userVipDTO.getStatus() == 1));
-        return R.ok().data(isVip).put("userVip", userVipDTO);
-    }
-
     @ApiOperation(value = "查询用户是否认证接口")
     @GetMapping(value = "/iscertificated")
     public R isCertificated() {
         UserProfileDTO profile = userService.getUserProfileInfo(AppContextHolder.getUserId());
-        boolean isVip = vipService.isValidVip(AppContextHolder.getUserId());
         Integer status = 0;//待认证
         if (profile != null) {
             status = 1;//待审核
 
             ZonedDateTime nowTime = ZonedDateTime.now();
-            if (isVip) {
-                UserVip userVip = vipService.getUserVipByUserId(AppContextHolder.getUserId());
-                ZonedDateTime beginTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(userVip.getEffectiveDate().toInstant().toEpochMilli()), ZoneId.systemDefault());
-                Duration duration = Duration.between(nowTime, beginTime).abs();
-                if (duration.toHours() >= (7 * 24)) {
-                    status = 3;//7天后 匹配到符合条件产品
-                }
+            if (true) {
+
             } else {
                 ZonedDateTime beginTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(profile.getRegisterDate().toInstant().toEpochMilli()), ZoneId.systemDefault());
                 Duration duration = Duration.between(nowTime, beginTime).abs();

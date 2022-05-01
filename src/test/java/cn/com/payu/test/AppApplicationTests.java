@@ -4,17 +4,17 @@ import cn.com.payu.Application;
 import cn.com.payu.app.common.enums.AliyunSMSTemplate;
 import cn.com.payu.app.common.enums.OrderChannel;
 import cn.com.payu.app.modules.entity.ChannelDownload;
-import cn.com.payu.app.modules.entity.Order;
-import cn.com.payu.app.modules.entity.UserVip;
 import cn.com.payu.app.modules.mapper.ChannelDownloadMapper;
-import cn.com.payu.app.modules.mapper.OrderMapper;
 import cn.com.payu.app.modules.model.AppUser;
 import cn.com.payu.app.modules.model.LeChargeSubmitOrderModel;
 import cn.com.payu.app.modules.model.UnifiedPayModel;
 import cn.com.payu.app.modules.model.lecharge.resp.LeChargeGetBalanceResponse;
 import cn.com.payu.app.modules.model.lecharge.resp.LeChargeQueryOrderResponse;
 import cn.com.payu.app.modules.model.lecharge.resp.LeChargeSubmitOrderResponse;
-import cn.com.payu.app.modules.service.*;
+import cn.com.payu.app.modules.service.LeChargeService;
+import cn.com.payu.app.modules.service.SmsService;
+import cn.com.payu.app.modules.service.UnifiedPayService;
+import cn.com.payu.app.modules.service.UserService;
 import cn.com.payu.app.modules.utils.AppContextHolder;
 import cn.com.payu.app.modules.utils.EncryptUtil;
 import cn.hutool.json.JSONUtil;
@@ -51,15 +51,6 @@ public class AppApplicationTests {
 
     @Autowired
     private UnifiedPayService unifiedPayService;
-
-    @Autowired
-    private VipService vipService;
-
-    @Autowired
-    private CouponService couponService;
-
-    @Resource
-    private OrderMapper orderMapper;
 
     //读取json文件
     public static String readJsonFile(String fileName) {
@@ -134,24 +125,11 @@ public class AppApplicationTests {
         System.out.println(user);
     }
 
-
-    @Test
-    public void testVip() {
-        Order order = orderMapper.selectById(68L);
-        vipService.subscribe(order);
-
-        UserVip userVip = vipService.getUserVipInfo(6L);
-        userVip.setStatus(1);
-        boolean vipFlag = vipService.isValidVip(userVip);
-        System.out.println(vipFlag);
-    }
-
     @Test
     public void testRakeBack() {
 //        orderService.completeCharge(rakeBackBO.getOrderNo());
 //        rewardService.rakeBack(AppContextHolder.getUserId(), rakeBackBO.getAmount());
     }
-
 
     @Autowired
     private LeChargeService leChargeService;
@@ -175,19 +153,6 @@ public class AppApplicationTests {
         System.out.println(JSONUtil.toJsonStr(response1));
         System.out.println(JSONUtil.toJsonStr(response2));
         System.out.println(JSONUtil.toJsonStr(response3));
-    }
-
-    @Test
-    public void testCoupon() {
-        couponService.assignCoupons(2L, 8L, 12);
-    }
-
-    @Autowired
-    private OrderService orderService;
-
-    @Test
-    public void testLeCharge2() {
-        orderService.completeCharge("495727109189206016", "");
     }
 
     @Resource

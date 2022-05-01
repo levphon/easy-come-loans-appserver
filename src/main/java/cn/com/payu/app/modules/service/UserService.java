@@ -11,18 +11,13 @@ import cn.com.payu.app.modules.model.params.BindBankCardBO;
 import cn.com.payu.app.modules.model.params.SettingChangeMobileBO;
 import cn.com.payu.app.modules.model.params.UserLoanBO;
 import cn.com.payu.app.modules.utils.AppContextHolder;
-import cn.com.payu.app.modules.utils.idcardUtil.IdcardInfoExtractor;
 import cn.hutool.core.lang.UUID;
-import com.glsx.plat.common.utils.DateUtils;
 import com.glsx.plat.common.utils.ObjectUtils;
-import com.glsx.plat.common.utils.StringUtils;
-import com.glsx.plat.context.utils.PropertiesUtils;
 import com.glsx.plat.jwt.base.ComJwtUser;
 import com.glsx.plat.jwt.util.JwtUtils;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -61,12 +56,6 @@ public class UserService {
     private UserBankCardMapper bankCardMapper;
     @Resource
     private CustUserContactMapper custUserContactMapper;
-
-    @Resource
-    private OcrIdcardMapper ocrIdcardMapper;
-
-    @Autowired
-    private VipService vipService;
 
     public UserThirdAuth getUserThirdAuthByOpenid(String openid) {
         return thirdAuthMapper.selectByOpenid(openid);
@@ -120,46 +109,6 @@ public class UserService {
         profile.setCreatedDate(now);
         userProfileMapper.insertUseGeneratedKeys(profile);
 
-        if (StringUtils.isNotEmpty(profileBO.getFirstName())) {
-            CustUserContact contact = new CustUserContact();
-            contact.setUserId(AppContextHolder.getUserId());
-            contact.setName(profileBO.getFirstName());
-            contact.setPhone(profileBO.getFirstPhone());
-            contact.setRelation(profileBO.getFirstRelation());
-            contact.setRelationCode(profileBO.getFirstRelationCode());
-            contact.setLevel(1);
-            contact.setCreatedDate(now);
-            custUserContactMapper.insert(contact);
-        }
-        if (StringUtils.isNotEmpty(profileBO.getSecondName())) {
-            CustUserContact contact = new CustUserContact();
-            contact.setUserId(AppContextHolder.getUserId());
-            contact.setName(profileBO.getSecondName());
-            contact.setPhone(profileBO.getSecondPhone());
-            contact.setRelation(profileBO.getSecondRelation());
-            contact.setRelationCode(profileBO.getSecondRelationCode());
-            contact.setLevel(2);
-            contact.setCreatedDate(now);
-            custUserContactMapper.insert(contact);
-        }
-
-        IdcardInfoExtractor ie = new IdcardInfoExtractor(profileBO.getIdentityNo());
-
-        OcrIdcard idcard = ocrIdcardMapper.selectByUserId(AppContextHolder.getUserId());
-        if (idcard == null) {
-            idcard = new OcrIdcard();
-        }
-        idcard.setUserId(AppContextHolder.getUserId());
-        idcard.setCid(profileBO.getIdentityNo());
-        idcard.setName(profileBO.getRealName());
-        idcard.setGender(ie.getZhGender());
-        idcard.setBirthday(DateUtils.format(ie.getBirthday()));
-
-        String path = PropertiesUtils.getProperty("app.img.url");
-        idcard.setFrontUrl(path + profileBO.getIdCardFront());
-        idcard.setBackUrl(path + profileBO.getIdCardBack());
-        ocrIdcardMapper.saveOrUpdate(idcard);
-
         UserLocalAccount localAccount = localAccountMapper.selectByUserId(AppContextHolder.getUserId());
         localAccount.setUsername(profileBO.getRealName());
         //localAccount.setAvatar(profileBO.getAvatar());
@@ -177,9 +126,9 @@ public class UserService {
         return AppContextHolder.getUser();
     }
 
-    public User checkExistUser(String mobile, Integer fromApp) {
+    public User checkExistUser(String mobile) {
         //用户可能只填了号码没完成后面注册流程，或是被邀请用户只留了号码，不能仅判断User是否存在
-        User user = userMapper.selectByAccount(mobile, fromApp);
+        User user = userMapper.selectByAccount(mobile);
         if (user != null) {
             //本地账号已经有了，表示已经注册
 //            UserLocalAccount localAccount = localAccountMapper.selectByUserId(user.getId());
@@ -226,7 +175,7 @@ public class UserService {
         ComJwtUser jwtUser = new ComJwtUser();
         jwtUser.setApplication(jwtUtils.getApplication());
         jwtUser.setJwtId(jwtId);
-        jwtUser.setBelong("APP" + user.getFromApp());
+        //jwtUser.setBelong("APP" + user.getFromApp());
         jwtUser.setUserId(String.valueOf(user.getId()));
         jwtUser.setAccount(user.getAccount());
         Map<String, Object> userMap = (Map<String, Object>) ObjectUtils.objectToMap(jwtUser);
@@ -235,7 +184,6 @@ public class UserService {
 
     public IndividualPage individualPage(Long userId) {
         UserLocalAccount localAccount = localAccountMapper.selectByUserId(userId);
-        User user = userMapper.selectById(userId);
 
         //用户资料
         UserProfile userProfile = userProfileMapper.selectByUserId(userId);
@@ -245,14 +193,12 @@ public class UserService {
 
         UserProfileDTO userProfileDTO = new UserProfileDTO();
         BeanUtils.copyProperties(userProfile, userProfileDTO);
+        userProfileDTO.setAccount(AppContextHolder.getAccount());
         userProfileDTO.setUsername(localAccount.getUsername());
         userProfileDTO.setAvatar(localAccount.getAvatar());
         userProfileDTO.setRegisterDate(userProfile.getCreatedDate());
 
-        //会员
-        UserVip userVip = vipService.getUserVipInfo(userId);
         IndividualPage page = new IndividualPage();
-        page.setVip(userVip.getLevel());
         page.setUser(userProfileDTO);
         return page;
     }
@@ -275,15 +221,13 @@ public class UserService {
     public List<BindBankCardDTO> getBindBankCards() {
         List<UserBankCard> bankCardList = bankCardMapper.selectByUserId(AppContextHolder.getUserId());
         List<BindBankCardDTO> list = Lists.newArrayList();
-        bankCardList.forEach(card -> {
-            list.add(UserBankCardConverter.INSTANCE.do2dto(card));
-        });
+        bankCardList.forEach(card -> list.add(UserBankCardConverter.INSTANCE.do2dto(card)));
         return list;
     }
 
     @Transactional(rollbackFor = Exception.class)
     public void changeMobile(SettingChangeMobileBO changeMobileBO) {
-        Optional<User> optUser = Optional.ofNullable(userMapper.selectByAccount(changeMobileBO.getMobile(), AppContextHolder.getFromApp()));
+        Optional<User> optUser = Optional.ofNullable(userMapper.selectByAccount(changeMobileBO.getMobile()));
         if (optUser.isPresent()) {
             User user = optUser.get();
             if (!user.getId().equals(AppContextHolder.getUserId())) {

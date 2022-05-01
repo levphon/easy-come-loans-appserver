@@ -45,16 +45,12 @@ public class InviteRegisterService {
      */
     @Transactional(rollbackFor = Exception.class)
     public User inviteRegister(InviteRegisterBO registerBO) {
-        if (registerBO.getFromApp() == null) {
-            registerBO.setFromApp(1);
-        }
-        User checkedUser = userService.checkExistUser(registerBO.getMobile(), registerBO.getFromApp());
+        User checkedUser = userService.checkExistUser(registerBO.getMobile());
         if (checkedUser == null) {
             MobileRegisterBO register = new MobileRegisterBO();
             register.setMobile(registerBO.getMobile());
             register.setPassword("123456");
             register.setChannel(registerBO.getInviteCode());
-            register.setFromApp(registerBO.getFromApp());
             User user = loginService.register(register);
             return user;
         }
@@ -78,7 +74,7 @@ public class InviteRegisterService {
                 download.setCreatedDate(new Date());
                 channelDownloadMapper.insert(download);
 
-                User user = userMapper.selectByAccount(decryptAccount != null ? decryptAccount : account, 1);
+                User user = userMapper.selectByAccount(decryptAccount != null ? decryptAccount : account);
 
                 EventTracking tracking = new EventTracking();
                 tracking.setChannel(channel);

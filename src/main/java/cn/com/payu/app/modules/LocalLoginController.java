@@ -46,15 +46,15 @@ public class LocalLoginController {
 
         String token = userService.createToken(user);
 
+        Map<String, String> userMap = Maps.newHashMap();
+        userMap.put("account", user.getAccount());
+
         Map<String, Object> rtnMap = new HashMap<>();
         rtnMap.put("token", token);
+        rtnMap.put("user", userMap);
         //user给前端判断是否已经完善资料
         if (ObjectUtil.isNotNull(user.getProfileId())) {
-            rtnMap.put("user", UserConverter.INSTANCE.do2dto(user));
-        } else {
-            Map<String, String> userMap = Maps.newHashMap();
-            userMap.put("account", user.getAccount());
-            rtnMap.put("user", userMap);
+            rtnMap.put("profile", UserConverter.INSTANCE.do2dto(user));
         }
         return R.ok().data(rtnMap);
     }
@@ -69,11 +69,6 @@ public class LocalLoginController {
         //参数检验
         if (loginBO.getLoginType() != 3) {
             return R.ok("联登参数异常，跳转到登录页面");
-        }
-
-        //默认登录app是1
-        if (loginBO.getFromApp() == null) {
-            loginBO.setFromApp(1);
         }
 
         AppUser user = loginService.uLogin(loginBO);

@@ -44,7 +44,7 @@ public class WebConfig implements WebMvcConfigurer {
         excludePathPatterns.add("/update");
         excludePathPatterns.add("/common/sendCode");
         excludePathPatterns.add("/register");
-        excludePathPatterns.add("/invite/register");
+        excludePathPatterns.add("/invite/**");
         excludePathPatterns.add("/login");
         excludePathPatterns.add("/ulogin");
         excludePathPatterns.add("/wechatAuth");
@@ -59,7 +59,6 @@ public class WebConfig implements WebMvcConfigurer {
         excludePathPatterns.add("/mng/captcha");
         excludePathPatterns.add("/mng/login");
         excludePathPatterns.add("/payment/callback/**");
-        excludePathPatterns.add("/invite/download");
 
         excludePathPatterns.add("/swagger-resources/**");
         excludePathPatterns.add("/webjars/**");

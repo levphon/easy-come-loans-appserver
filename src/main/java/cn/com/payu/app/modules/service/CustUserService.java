@@ -25,47 +25,11 @@ public class CustUserService {
     public PageInfo<CustUserRegisterListDTO> registerSearch(CustUserSearch search) {
         Page page = PageHelper.startPage(search.getPageNumber(), search.getPageSize());
         List<CustUserRegisterListDTO> list = custUserProfileMapper.registerSearch(search);
-        list.forEach(curd -> {
-            curd.setVipStatusStr("非会员");
-            if (curd.getVipStatus() != null) {
-                if ((curd.getVipStatus() == 1 || curd.getVipStatus() == 2) && curd.getVipExpireDays() <= 0) {
-                    if (curd.getVipDays() <= 31) {
-                        curd.setVipStatusStr("体验会员");
-                    }
-                    if (curd.getVipDays() >= 365) {
-                        curd.setVipStatusStr("正式会员");
-                    }
-                    if (curd.getDelFlag() < 0) {
-                        curd.setVipStatusStr("注销会员");
-                    }
-                } else {
-                    curd.setVipStatusStr("过期会员");
-                }
-            }
-        });
         return new PageInfo<>(list);
     }
 
     public List<CustUserRegisterExport> registerExport(CustUserSearch search) {
         List<CustUserRegisterExport> list = custUserProfileMapper.registerExport(search);
-        list.forEach(curd -> {
-            curd.setVipStatusStr("非会员");
-            if (curd.getVipStatus() != null) {
-                if ((curd.getVipStatus() == 1 || curd.getVipStatus() == 2) && curd.getVipExpireDays() <= 0) {
-                    if (curd.getVipDays() <= 31) {
-                        curd.setVipStatusStr("体验会员");
-                    }
-                    if (curd.getVipDays() >= 365) {
-                        curd.setVipStatusStr("正式会员");
-                    }
-                    if (curd.getDelFlag() < 0) {
-                        curd.setVipStatusStr("注销会员");
-                    }
-                } else {
-                    curd.setVipStatusStr("过期会员");
-                }
-            }
-        });
         return list;
     }
 

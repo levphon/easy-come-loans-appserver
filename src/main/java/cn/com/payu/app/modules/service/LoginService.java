@@ -80,14 +80,11 @@ public class LoginService {
      */
     @Transactional(rollbackFor = Exception.class)
     public User register(MobileRegisterBO registerBO) {
-        if (registerBO.getFromApp() == null) {
-            registerBO.setFromApp(1);
-        }
-        User user = Optional.ofNullable(userMapper.selectByAccount(registerBO.getMobile(), registerBO.getFromApp())).orElse(new User());
+
+        User user = Optional.ofNullable(userMapper.selectByAccount(registerBO.getMobile())).orElse(new User());
         user.setAccount(registerBO.getMobile());
         user.setBlacklist(0);
         user.setChannel(StringUtils.isNotEmpty(registerBO.getChannel()) ? registerBO.getChannel() : "xinxinrong");
-        user.setFromApp(registerBO.getFromApp());
         userMapper.saveOrUpdate(user);
 
         UserApp userApp = Optional.ofNullable(userAppMapper.selectByUserId(user.getId())).orElse(new UserApp());
@@ -152,7 +149,7 @@ public class LoginService {
     @Transactional(rollbackFor = Exception.class)
     public AppUser uLogin(LoginByMobileBO loginBO) {
         String mobile = EncryptUtil.PBEDecrypt(loginBO.getMobile());
-        User user = userMapper.selectByAccount(EncryptUtil.PBEDecrypt(loginBO.getMobile()), loginBO.getFromApp());
+        User user = userMapper.selectByAccount(EncryptUtil.PBEDecrypt(loginBO.getMobile()));
         //本地登录
         if (user == null) {
             log.warn("{} 用户 {} 不存在", loginBO.getMobile(), mobile);
@@ -184,16 +181,12 @@ public class LoginService {
 
     @Transactional(rollbackFor = Exception.class)
     public AppUser localAuth(LoginByMobileBO loginBO) {
-        if (loginBO.getFromApp() == null) {
-            loginBO.setFromApp(1);
-        }
-        User user = userMapper.selectByAccount(loginBO.getMobile(), loginBO.getFromApp());
+        User user = userMapper.selectByAccount(loginBO.getMobile());
         //本地登录
         if (user == null) {
             MobileRegisterBO registerBO = new MobileRegisterBO();
             registerBO.setMobile(loginBO.getMobile());
             registerBO.setPassword("123456");
-            registerBO.setFromApp(loginBO.getFromApp());
             user = register(registerBO);
         }
         if (user.getBlacklist() == 2) {
@@ -360,18 +353,13 @@ public class LoginService {
             throw new AppServerException("请勿重复绑定账号");
         }
 
-        if (bindMobileBO.getFromApp() == null) {
-            bindMobileBO.setFromApp(1);
-        }
-
         //可能被邀请或注册中断，User可能存在
-        User user = userMapper.selectByAccount(bindMobileBO.getMobile(), bindMobileBO.getFromApp());
+        User user = userMapper.selectByAccount(bindMobileBO.getMobile());
         if (user == null) {
             //用户不存在，注册一个用户
             MobileRegisterBO registerBO = new MobileRegisterBO();
             registerBO.setMobile(bindMobileBO.getMobile());
             registerBO.setPassword(bindMobileBO.getPassword());
-            registerBO.setFromApp(bindMobileBO.getFromApp());
             user = register(registerBO);
         } else {
             UserAuthRel userAuthRel = authRelMapper.selectLocalAuthRelByUserId(user.getId());

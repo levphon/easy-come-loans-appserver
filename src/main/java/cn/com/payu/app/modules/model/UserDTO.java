@@ -11,6 +11,5 @@ public class UserDTO {
     private String avatar;
     private String unionId;
     private Integer blacklist;
-    private Boolean isVip;
 
 }

@@ -10,7 +10,7 @@ public interface UserMapper extends CommonBaseMapper<User> {
 
     User selectById(@Param("id") Long id);
 
-    User selectByAccount(@Param("account") String account, @Param("fromApp") Integer fromApp);
+    User selectByAccount(@Param("account") String account);
 
     User selectByPhoneMd5(@Param("phoneMd5") String phoneMd5);
 

@@ -35,7 +35,4 @@ public class MngOrderExport {
     @ExcelProperty(value = "来源渠道", index = 6)
     private String channel;
 
-    @ExcelProperty(value = "APP", index = 7)
-    private String fromApp;
-
 }

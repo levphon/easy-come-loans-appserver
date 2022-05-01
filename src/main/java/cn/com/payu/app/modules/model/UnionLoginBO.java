@@ -16,9 +16,4 @@ public class UnionLoginBO {
     @NotBlank
     private String sign;
 
-    /**
-     * 来自app：1：默认橙色 2：绿色 3：黑色 4：蓝色
-     */
-    private Integer fromApp;
-
 }

@@ -1,5 +1,6 @@
 package cn.com.payu.app.modules.service;
 
+import cn.com.payu.app.common.enums.AuthType;
 import cn.com.payu.app.modules.converter.AppSettingConverter;
 import cn.com.payu.app.modules.converter.UserFeedbackConverter;
 import cn.com.payu.app.modules.entity.AppSetting;
@@ -11,7 +12,6 @@ import cn.com.payu.app.modules.model.AppSettingDTO;
 import cn.com.payu.app.modules.model.UserFeedbackBO;
 import cn.com.payu.app.modules.model.UserSettingBO;
 import cn.com.payu.app.modules.utils.AppContextHolder;
-import cn.com.payu.app.common.enums.AuthType;
 import com.google.common.collect.Lists;
 import org.springframework.stereotype.Service;
 
@@ -95,5 +95,5 @@ public class SettingService {
         });
         authRelMapper.logicDeleteByUserId(userId);
     }
-    
+
 }
