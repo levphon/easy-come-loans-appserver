@@ -23,8 +23,8 @@ public class ProductController {
     private ProductService productService;
 
     @GetMapping(value = "/list")
-    public R list() {
-        List<ProductDTO> items = productService.list();
+    public R list(String cityCode) {
+        List<ProductDTO> items = productService.list(cityCode);
         return R.ok().data(items);
     }
 

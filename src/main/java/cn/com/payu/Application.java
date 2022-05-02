@@ -3,6 +3,8 @@ package cn.com.payu;
 import com.glsx.plat.context.EnableRestAdmin;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration;
+import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
 import org.springframework.context.annotation.EnableMBeanExport;
 import org.springframework.jmx.support.RegistrationPolicy;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -21,7 +23,7 @@ import static java.util.TimeZone.getTimeZone;
 @EnableTransactionManagement
 @MapperScan({"cn.com.payu.*.modules.mapper", "com.glsx.plat.loggin.mapper"})
 @EnableMBeanExport(registration = RegistrationPolicy.IGNORE_EXISTING)
-@SpringBootApplication(scanBasePackages = {"cn.com.payu.*"})
+@SpringBootApplication(scanBasePackages = {"cn.com.payu.*"}, exclude = {MongoAutoConfiguration.class, MongoDataAutoConfiguration.class})
 public class Application {
 
     public static void main(String[] args) {

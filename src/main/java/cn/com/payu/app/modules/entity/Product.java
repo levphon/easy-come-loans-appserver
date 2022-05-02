@@ -25,6 +25,11 @@ public class Product extends BaseEntity {
 
     private String tags;
 
+    private String city;
+
+    @Column(name = "city_code")
+    private String cityCode;
+
     /**
      * 最大额度
      */

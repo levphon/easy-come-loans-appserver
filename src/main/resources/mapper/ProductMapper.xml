@@ -9,6 +9,8 @@
         <result column="channel" jdbcType="VARCHAR" property="channel"/>
         <result column="logo" jdbcType="VARCHAR" property="logo"/>
         <result column="tags" jdbcType="VARCHAR" property="tags"/>
+        <result column="city" jdbcType="VARCHAR" property="city"/>
+        <result column="city_code" jdbcType="VARCHAR" property="cityCode"/>
         <result column="max_amount" jdbcType="DECIMAL" property="maxAmount"/>
         <result column="day_interest_rate" jdbcType="FLOAT" property="dayInterestRate"/>
         <result column="periods" jdbcType="INTEGER" property="periods"/>
@@ -34,7 +36,7 @@
         <!--
           WARNING - @mbg.generated
         -->
-        id, channel, name, logo, tags, max_amount, day_interest_rate, used_cnt, url, type, remark, order_num,
+        id, channel, name, logo, tags, city, city_code, max_amount, day_interest_rate, used_cnt, url, type, remark, order_num,
         periods, shelf_time, off_shelf_time, max_daily_uv, max_total_uv, position, unit_price,
         enable_status, del_flag, created_date, created_by, updated_date, updated_by
     </sql>
@@ -53,6 +55,9 @@
         from t_product
         where del_flag = 0
         and enable_status = 1
+        <if test="cityCode != null and cityCode != ''">
+            and tp.city_code = #{cityCode}
+        </if>
         order by type desc, order_num asc
     </select>
 

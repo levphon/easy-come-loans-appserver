@@ -22,12 +22,6 @@ public class CustUserRegisterListDTO {
     private BigDecimal loanAmount;
     private Integer loanPeriod;
 
-    private Integer vipStatus;
-    private String vipStatusStr;
-
-    private Integer vipDays;
-    private Integer vipExpireDays;
-
     private Integer delFlag;
 
 }

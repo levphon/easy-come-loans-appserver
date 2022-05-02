@@ -40,18 +40,6 @@ public class CustUserRegisterExport {
     private Integer loanPeriod;
 
     @ExcelIgnore
-    private Integer vipStatus;
-
-    @ExcelProperty(value = "会员类型", index = 8)
-    private String vipStatusStr;
-
-    @ExcelIgnore
-    private Integer vipDays;
-
-    @ExcelIgnore
-    private Integer vipExpireDays;
-
-    @ExcelIgnore
     private Integer delFlag;
 
 }

@@ -47,6 +47,7 @@ public class MngProductService {
             throw new AppServerException("该产品已存在！");
         }
         Product product = ProductConverter.INSTANCE.bo2do(productBO);
+        product.setType(0);
         product.setEnableStatus(SysConstants.EnableStatus.disable.getCode());
         product.setCreatedDate(new Date());
         productMapper.insert(product);

@@ -17,9 +17,9 @@ public interface ProductMapper extends CommonBaseMapper<Product> {
 
     int countByName(@Param("name") String name);
 
-    Product selectByName(String name);
+    Product selectByName(@Param("name") String name);
 
-    List<Product> selectUsable();
+    List<Product> selectUsable(@Param("cityCode") String cityCode);
 
     List<MngProductDTO> search(ProductSearch search);
 

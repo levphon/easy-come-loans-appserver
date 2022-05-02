@@ -105,33 +105,13 @@
         tcup.bank_account bankAccount,
         tcup.loan_amount loanAmount,
         tcup.loan_period as loanPeriod,
-        tcuv.status vipStatus,
-        tcuv.vipDays,
-        tcuv.vipExpireDays,
         tcu.del_flag delFlag,
         tcup.created_date registerDate
         from t_cust_user_profile tcup
         left join t_cust_user tcu on tcu.id = tcup.user_id
-        left join (select user_id, status, TIMESTAMPDIFF(DAY, effective_date, expiration_date) vipDays,TIMESTAMPDIFF(DAY, expiration_date, now()) vipExpireDays from
-        t_cust_user_vip)
-        tcuv
-        on tcuv.user_id = tcu.id
         where 1=1
         <if test="term != null and term !=''">
             and (tcu.account like CONCAT('%',#{term},'%') or tcup.real_name like CONCAT('%',#{term},'%'))
-        </if>
-        <if test="status != null">
-            <choose>
-                <when test="status == 1">
-                    and tcuv.status in (1, 3) and vipExpireDays &lt;= 0 and vipDays &lt;= 31
-                </when>
-                <when test="status == 2">
-                    and tcuv.status in (1, 3) and vipExpireDays &lt;= 0 and vipDays >= 365
-                </when>
-                <when test="status == 3">
-                    and tcuv.status in (1, 3) and vipExpireDays &lt;= 0 and tcu.del_flag = -1
-                </when>
-            </choose>
         </if>
         order by tcup.created_date desc
     </select>
@@ -145,32 +125,13 @@
         tcup.bank_account bankAccount,
         tcup.loan_amount loanAmount,
         tcup.loan_period as loanPeriod,
-        tcuv.status vipStatus,
-        tcuv.vipDays,
-        tcuv.vipExpireDays,
         tcu.del_flag delFlag,
         tcup.created_date registerDate
         from t_cust_user_profile tcup
         left join t_cust_user tcu on tcu.id = tcup.user_id
-        left join (select user_id, status, TIMESTAMPDIFF(DAY, effective_date, expiration_date) vipDays,TIMESTAMPDIFF(DAY, expiration_date, now()) vipExpireDays from
-        t_cust_user_vip)
-        tcuv on tcuv.user_id = tcu.id
         where 1=1
         <if test="term != null and term !=''">
             and (tcu.account like CONCAT('%',#{term},'%') or tcup.real_name like CONCAT('%',#{term},'%'))
-        </if>
-        <if test="status != null">
-            <choose>
-                <when test="status == 1">
-                    and tcuv.status in (1, 3) and vipExpireDays &lt;= 0 and vipDays &lt;= 31
-                </when>
-                <when test="status == 2">
-                    and tcuv.status in (1, 3) and vipExpireDays &lt;= 0 and vipDays >= 365
-                </when>
-                <when test="status == 3">
-                    and tcuv.status in (1, 3) and vipExpireDays &lt;= 0 and tcu.del_flag = -1
-                </when>
-            </choose>
         </if>
         order by tcup.created_date desc
     </select>
