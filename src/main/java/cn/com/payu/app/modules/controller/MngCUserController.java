@@ -1,9 +1,9 @@
 package cn.com.payu.app.modules.controller;
 
-import cn.com.payu.app.modules.model.CustUserRegisterListDTO;
-import cn.com.payu.app.modules.model.export.CustUserRegisterExport;
+import cn.com.payu.app.modules.model.MngCUserDTO;
+import cn.com.payu.app.modules.model.export.MngCUserExport;
 import cn.com.payu.app.modules.model.params.CustUserSearch;
-import cn.com.payu.app.modules.service.MngCustUserService;
+import cn.com.payu.app.modules.service.MngCUserService;
 import com.github.pagehelper.PageInfo;
 import com.glsx.plat.common.utils.DateUtils;
 import com.glsx.plat.core.web.R;
@@ -28,20 +28,20 @@ public class MngCUserController {
 
 
     @Autowired
-    private MngCustUserService mngCustUserService;
+    private MngCUserService mngCUserService;
 
     @ApiOperation("注册用户列表查询")
     @GetMapping("/search")
     public R registerSearch(CustUserSearch search) {
-        PageInfo<CustUserRegisterListDTO> pageInfo = mngCustUserService.registerSearch(search);
+        PageInfo<MngCUserDTO> pageInfo = mngCUserService.search(search);
         return R.ok().putPageData(pageInfo);
     }
 
     @ApiOperation("注册用户导出")
     @GetMapping(value = "/export")
     public void registerExport(HttpServletResponse response, CustUserSearch search) throws Exception {
-        List<CustUserRegisterExport> list = mngCustUserService.registerExport(search);
-        EasyExcelUtils.writeExcel(response, list, "注册用户_" + DateUtils.formatSerial(new Date()), "Sheet1", CustUserRegisterExport.class);
+        List<MngCUserExport> list = mngCUserService.export(search);
+        EasyExcelUtils.writeExcel(response, list, "注册用户_" + DateUtils.formatSerial(new Date()), "Sheet1", MngCUserExport.class);
     }
 
 }

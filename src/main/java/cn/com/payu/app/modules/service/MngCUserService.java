@@ -2,8 +2,8 @@ package cn.com.payu.app.modules.service;
 
 import cn.com.payu.app.modules.mapper.UserMapper;
 import cn.com.payu.app.modules.mapper.UserProfileMapper;
-import cn.com.payu.app.modules.model.CustUserRegisterListDTO;
-import cn.com.payu.app.modules.model.export.CustUserRegisterExport;
+import cn.com.payu.app.modules.model.MngCUserDTO;
+import cn.com.payu.app.modules.model.export.MngCUserExport;
 import cn.com.payu.app.modules.model.params.CustUserSearch;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -14,7 +14,7 @@ import javax.annotation.Resource;
 import java.util.List;
 
 @Service
-public class MngCustUserService {
+public class MngCUserService {
 
     @Resource
     private UserMapper custUserMapper;
@@ -22,14 +22,14 @@ public class MngCustUserService {
     @Resource
     private UserProfileMapper custUserProfileMapper;
 
-    public PageInfo<CustUserRegisterListDTO> registerSearch(CustUserSearch search) {
+    public PageInfo<MngCUserDTO> search(CustUserSearch search) {
         Page page = PageHelper.startPage(search.getPageNumber(), search.getPageSize());
-        List<CustUserRegisterListDTO> list = custUserProfileMapper.registerSearch(search);
+        List<MngCUserDTO> list = custUserProfileMapper.search(search);
         return new PageInfo<>(list);
     }
 
-    public List<CustUserRegisterExport> registerExport(CustUserSearch search) {
-        List<CustUserRegisterExport> list = custUserProfileMapper.registerExport(search);
+    public List<MngCUserExport> export(CustUserSearch search) {
+        List<MngCUserExport> list = custUserProfileMapper.export(search);
         return list;
     }
 

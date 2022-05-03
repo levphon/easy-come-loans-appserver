@@ -96,17 +96,46 @@
         where user_id = #{userId}
     </update>
 
-    <select id="registerSearch" resultType="cn.com.payu.app.modules.model.CustUserRegisterListDTO">
+    <select id="search" resultType="cn.com.payu.app.modules.model.MngCUserDTO">
         select tcup.user_id userId,
         tcup.real_name realName,
         tcup.identity_no identityNo,
         tcu.account mobile,
         tcup.bank_name bankName,
+        tcup.bank_name_code bankNameCode,
         tcup.bank_account bankAccount,
         tcup.loan_amount loanAmount,
-        tcup.loan_period as loanPeriod,
-        tcu.del_flag delFlag,
-        tcup.created_date registerDate
+        tcup.loan_period loanPeriod,
+        tcup.loan_method loanMethod,
+        tcup.province,
+        tcup.province_code provinceCode,
+        tcup.city,
+        tcup.city_code cityCode,
+        tcup.address address,
+        tcup.loan_limit loanLimit,
+        tcup.loan_month loanMonth,
+        tcup.education,
+        tcup.education_code educationCode,
+        tcup.loan_usage loanUsage,
+        tcup.loan_usage_code loanUsageCode,
+        tcup.sesame_score sesameScore,
+        tcup.particle_loan particleLoan,
+        tcup.jd_white_note jdWhiteNote,
+        tcup.ant_spend antSpend,
+        tcup.occupation,
+        tcup.occupation_code occupationCode,
+        tcup.work_month workMonth,
+        tcup.social_security socialSecurity,
+        tcup.accumulation_fund accumulationFund,
+        tcup.commercial_insurance commercialInsurance,
+        tcup.house_assets houseAssets,
+        tcup.vehicle_assets vehicleAssets,
+        tcup.monthly_income monthlyIncome,
+        tcup.monthly_income_code monthlyIncomeCode,
+        tcup.salary_payment salaryPayment,
+        tcup.credit_situation creditSituation,
+        tcup.credit_card_amount creditCardAmount,
+        tcup.created_date createdDate
         from t_cust_user_profile tcup
         left join t_cust_user tcu on tcu.id = tcup.user_id
         where 1=1
@@ -116,17 +145,46 @@
         order by tcup.created_date desc
     </select>
 
-    <select id="registerExport" resultType="cn.com.payu.app.modules.model.export.CustUserRegisterExport">
+    <select id="export" resultType="cn.com.payu.app.modules.model.export.MngCUserExport">
         select tcup.user_id userId,
         tcup.real_name realName,
         tcup.identity_no identityNo,
         tcu.account mobile,
         tcup.bank_name bankName,
+        tcup.bank_name_code bankNameCode,
         tcup.bank_account bankAccount,
         tcup.loan_amount loanAmount,
-        tcup.loan_period as loanPeriod,
-        tcu.del_flag delFlag,
-        tcup.created_date registerDate
+        tcup.loan_period loanPeriod,
+        tcup.loan_method loanMethod,
+        tcup.province,
+        tcup.province_code provinceCode,
+        tcup.city,
+        tcup.city_code cityCode,
+        tcup.address address,
+        tcup.loan_limit loanLimit,
+        tcup.loan_month loanMonth,
+        tcup.education,
+        tcup.education_code educationCode,
+        tcup.loan_usage loanUsage,
+        tcup.loan_usage_code loanUsageCode,
+        tcup.sesame_score sesameScore,
+        tcup.particle_loan particleLoan,
+        tcup.jd_white_note jdWhiteNote,
+        tcup.ant_spend antSpend,
+        tcup.occupation,
+        tcup.occupation_code occupationCode,
+        tcup.work_month workMonth,
+        tcup.social_security socialSecurity,
+        tcup.accumulation_fund accumulationFund,
+        tcup.commercial_insurance commercialInsurance,
+        tcup.house_assets houseAssets,
+        tcup.vehicle_assets vehicleAssets,
+        tcup.monthly_income monthlyIncome,
+        tcup.monthly_income_code monthlyIncomeCode,
+        tcup.salary_payment salaryPayment,
+        tcup.credit_situation creditSituation,
+        tcup.credit_card_amount creditCardAmount,
+        tcup.created_date createdDate
         from t_cust_user_profile tcup
         left join t_cust_user tcu on tcu.id = tcup.user_id
         where 1=1

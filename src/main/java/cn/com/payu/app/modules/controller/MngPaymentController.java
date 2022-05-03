@@ -34,29 +34,6 @@ public class MngPaymentController {
         return R.ok().putPageData(pageInfo);
     }
 
-//    @SysLog(module = MODULE, action = OperateType.ADD)
-//    @ApiOperation("新增支付")
-//    @PostMapping(value = "/add")
-//    public R add(@RequestBody @Validated MngPaymentBO paymentBO) {
-//        mngPaymentService.add(paymentBO);
-//        return R.ok();
-//    }
-//
-//    @GetMapping("/info")
-//    public R info(@RequestParam("id") Long id) {
-//        MngGoodsInfoDTO infoDTO = mngPaymentService.getInfoById(id);
-//        return R.ok().data(infoDTO);
-//    }
-//
-//    @SysLog(module = MODULE, action = OperateType.EDIT)
-//    @ApiOperation("编辑支付")
-//    @PostMapping(value = "/edit")
-//    public R edit(@RequestBody @Validated MngPaymentBO paymentBO) {
-//        AssertUtils.isNull(paymentBO.getId(), "ID不能为空");
-//        mngPaymentService.edit(paymentBO);
-//        return R.ok();
-//    }
-
     @ApiOperation("切换支付")
     @SysLog(module = MODULE, action = OperateType.SETTING)
     @GetMapping("/switch")
