@@ -3,7 +3,6 @@ package cn.com.payu.app.modules.model;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 @Data
@@ -18,7 +17,7 @@ public class MngProductBO {
     private String city;
     private String cityCode;
 
-    private Integer periods;
+    private String periods;
     private BigDecimal maxAmount;
     private Float dayInterestRate;
     private BigDecimal unitPrice;

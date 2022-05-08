@@ -2,7 +2,6 @@ package cn.com.payu.app.modules.model;
 
 import lombok.Data;
 
-import javax.persistence.Column;
 import java.math.BigDecimal;
 
 @Data
@@ -17,6 +16,7 @@ public class ProductDTO {
     private String cityCode;
     private BigDecimal maxAmount;
     private Float dayInterestRate;
+    private String periods;
     private Integer usedCnt;
     private Integer type;
     private String remark;

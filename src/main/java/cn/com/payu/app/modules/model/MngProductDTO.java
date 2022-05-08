@@ -11,7 +11,7 @@ public class MngProductDTO {
 
     private Long id;
     private String productName;
-    private Integer periods;
+    private String periods;
     private BigDecimal maxAmount;
     private Float dayInterestRate;
     private Integer type;

@@ -14,7 +14,7 @@ public class MngProductInfoDTO {
     private String tags;
     private String city;
     private String cityCode;
-    private Integer periods;
+    private String periods;
     private BigDecimal maxAmount;
     private Float dayInterestRate;
     private Integer usedCnt;

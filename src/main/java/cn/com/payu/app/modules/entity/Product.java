@@ -45,7 +45,7 @@ public class Product extends BaseEntity {
     /**
      * 期数
      */
-    private Integer periods;
+    private String periods;
 
     /**
      * 使用人数

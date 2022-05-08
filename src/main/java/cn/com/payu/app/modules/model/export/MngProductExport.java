@@ -24,7 +24,7 @@ public class MngProductExport {
     private String tags;
 
     @ExcelProperty(value = "产品期数", index = 3)
-    private Integer periods;
+    private String periods;
 
     @ExcelProperty(value = "产品利率", index = 4)
     private Float dayInterestRate;

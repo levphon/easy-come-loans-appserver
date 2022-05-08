@@ -13,7 +13,7 @@
         <result column="city_code" jdbcType="VARCHAR" property="cityCode"/>
         <result column="max_amount" jdbcType="DECIMAL" property="maxAmount"/>
         <result column="day_interest_rate" jdbcType="FLOAT" property="dayInterestRate"/>
-        <result column="periods" jdbcType="INTEGER" property="periods"/>
+        <result column="periods" jdbcType="VARCHAR" property="periods"/>
         <result column="unit_price" jdbcType="DECIMAL" property="unitPrice"/>
         <result column="used_cnt" jdbcType="INTEGER" property="usedCnt"/>
         <result column="url" jdbcType="VARCHAR" property="url"/>
