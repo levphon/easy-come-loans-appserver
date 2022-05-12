@@ -70,6 +70,11 @@ public class Product extends BaseEntity {
     private Integer type;
 
     /**
+     * 系统信息
+     */
+    private String os;
+
+    /**
      * 扩展信息
      */
     private String remark;

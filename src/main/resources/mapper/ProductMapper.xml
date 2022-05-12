@@ -18,6 +18,7 @@
         <result column="used_cnt" jdbcType="INTEGER" property="usedCnt"/>
         <result column="url" jdbcType="VARCHAR" property="url"/>
         <result column="type" jdbcType="TINYINT" property="type"/>
+        <result column="os" jdbcType="VARCHAR" property="os"/>
         <result column="remark" jdbcType="VARCHAR" property="remark"/>
         <result column="order_num" jdbcType="TINYINT" property="orderNum"/>
         <result column="enable_status" jdbcType="TINYINT" property="enableStatus"/>
@@ -36,7 +37,7 @@
         <!--
           WARNING - @mbg.generated
         -->
-        id, channel, name, logo, tags, city, city_code, max_amount, day_interest_rate, used_cnt, url, type, remark, order_num,
+        id, channel, name, logo, tags, city, city_code, max_amount, day_interest_rate, used_cnt, url, type, os, remark, order_num,
         periods, shelf_time, off_shelf_time, max_daily_uv, max_total_uv, position, unit_price,
         enable_status, del_flag, created_date, created_by, updated_date, updated_by
     </sql>
@@ -57,6 +58,9 @@
         and enable_status = 1
         <if test="cityCode != null and cityCode != ''">
             and tp.city_code = #{cityCode}
+        </if>
+        <if test="os != null and os != ''">
+            and tp.os = #{os}
         </if>
         order by type desc, order_num asc
     </select>

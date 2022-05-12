@@ -19,7 +19,7 @@ public interface ProductMapper extends CommonBaseMapper<Product> {
 
     Product selectByName(@Param("name") String name);
 
-    List<Product> selectUsable(@Param("cityCode") String cityCode);
+    List<Product> selectUsable(@Param("cityCode") String cityCode, @Param("os") String os);
 
     List<MngProductDTO> search(ProductSearch search);
 

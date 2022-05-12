@@ -16,6 +16,7 @@ public class MngProductBO {
     private String tags;
     private String city;
     private String cityCode;
+    private String os;
 
     private String periods;
     private BigDecimal maxAmount;

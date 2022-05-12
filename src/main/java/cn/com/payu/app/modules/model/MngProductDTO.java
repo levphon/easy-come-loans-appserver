@@ -15,6 +15,7 @@ public class MngProductDTO {
     private BigDecimal maxAmount;
     private Float dayInterestRate;
     private Integer type;
+    private String os;
     private String remark;
     private Integer orderNum;
     private Integer enableStatus;

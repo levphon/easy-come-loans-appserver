@@ -26,8 +26,8 @@ public class ProductService {
     @Resource
     private ProductDrainageMapper productDrainageMapper;
 
-    public List<ProductDTO> list(String cityCode) {
-        List<Product> itemList = productMapper.selectUsable(cityCode);
+    public List<ProductDTO> list(String cityCode, String os) {
+        List<Product> itemList = productMapper.selectUsable(cityCode, os);
         List<ProductDTO> list = Lists.newArrayList();
         itemList.forEach(item -> {
 //            if (AppContextHolder.isVip()) {//会员可见全部产品
