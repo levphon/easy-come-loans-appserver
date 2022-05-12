@@ -57,10 +57,10 @@
         where del_flag = 0
         and enable_status = 1
         <if test="cityCode != null and cityCode != ''">
-            and tp.city_code = #{cityCode}
+            and city_code = #{cityCode}
         </if>
         <if test="os != null and os != ''">
-            and tp.os = #{os}
+            and os = #{os}
         </if>
         order by type desc, order_num asc
     </select>
