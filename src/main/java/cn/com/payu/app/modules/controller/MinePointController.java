@@ -22,7 +22,7 @@ public class MinePointController {
     @Autowired
     private MinePointService minePointService;
 
-    @SysLog
+//    @SysLog
     @ApiOperation(value = "PV/UV统计接口")
     @PostMapping(value = "/upv")
     public R upv(@RequestBody PageViewBO pageViewBO) {

@@ -6,6 +6,7 @@ import cn.com.payu.app.modules.model.LoginByMobileBO;
 import cn.com.payu.app.modules.service.LoginService;
 import cn.com.payu.app.modules.service.UserService;
 import cn.hutool.core.util.ObjectUtil;
+import com.glsx.plat.common.annotation.SysLog;
 import com.glsx.plat.core.web.R;
 import com.google.common.collect.Maps;
 import io.swagger.annotations.Api;
@@ -38,6 +39,7 @@ public class LocalLoginController {
     /**
      * 本地登录
      */
+    @SysLog
     @ApiOperation(value = "注册/登录接口")
     @PostMapping(value = "/login")
     public R login(@RequestBody @Validated LoginByMobileBO loginBO) {
