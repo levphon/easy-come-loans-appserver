@@ -11,6 +11,8 @@ public class MngProductInfoDTO {
     private String logo;
     private String name;
     private String tags;
+    private String province;
+    private String provinceCode;
     private String city;
     private String cityCode;
     private String os;

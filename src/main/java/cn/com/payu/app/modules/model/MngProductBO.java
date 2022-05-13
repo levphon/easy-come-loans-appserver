@@ -14,6 +14,8 @@ public class MngProductBO {
     private String name;
     private String logo;
     private String tags;
+    private String province;
+    private String provinceCode;
     private String city;
     private String cityCode;
     private String os;

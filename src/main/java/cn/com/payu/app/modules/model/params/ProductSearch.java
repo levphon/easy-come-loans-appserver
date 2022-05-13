@@ -10,6 +10,10 @@ public class ProductSearch extends Page {
     private String eDate;
 
     private String productName;
+    private String provinceCode;
+    private String cityCode;
+    private String os;
+    private Integer position;
     private Integer enableStatus;
 
 }

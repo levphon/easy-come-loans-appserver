@@ -7,6 +7,7 @@ import cn.com.payu.app.modules.entity.ProductDrainage;
 import cn.com.payu.app.modules.mapper.ProductDrainageMapper;
 import cn.com.payu.app.modules.mapper.ProductMapper;
 import cn.com.payu.app.modules.model.ProductDTO;
+import cn.com.payu.app.modules.model.params.ProductSearch;
 import cn.com.payu.app.modules.utils.AppContextHolder;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
@@ -26,8 +27,8 @@ public class ProductService {
     @Resource
     private ProductDrainageMapper productDrainageMapper;
 
-    public List<ProductDTO> list(String cityCode, String os) {
-        List<Product> itemList = productMapper.selectUsable(cityCode, os);
+    public List<ProductDTO> list(ProductSearch search) {
+        List<Product> itemList = productMapper.selectUsable(search);
         List<ProductDTO> list = Lists.newArrayList();
         itemList.forEach(item -> {
 //            if (AppContextHolder.isVip()) {//会员可见全部产品

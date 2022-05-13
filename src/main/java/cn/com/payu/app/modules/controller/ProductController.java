@@ -1,6 +1,7 @@
 package cn.com.payu.app.modules.controller;
 
 import cn.com.payu.app.modules.model.ProductDTO;
+import cn.com.payu.app.modules.model.params.ProductSearch;
 import cn.com.payu.app.modules.service.ProductService;
 import com.glsx.plat.core.web.R;
 import io.swagger.annotations.Api;
@@ -23,8 +24,8 @@ public class ProductController {
     private ProductService productService;
 
     @GetMapping(value = "/list")
-    public R list(String cityCode, String os) {
-        List<ProductDTO> items = productService.list(cityCode, os);
+    public R list(ProductSearch search) {
+        List<ProductDTO> items = productService.list(search);
         return R.ok().data(items);
     }
 

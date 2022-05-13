@@ -25,6 +25,11 @@ public class Product extends BaseEntity {
 
     private String tags;
 
+    private String province;
+
+    @Column(name = "province_code")
+    private String provinceCode;
+
     private String city;
 
     @Column(name = "city_code")
