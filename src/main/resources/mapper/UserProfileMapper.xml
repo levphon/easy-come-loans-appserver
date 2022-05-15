@@ -194,4 +194,10 @@
         order by tcup.created_date desc
     </select>
 
+    <select id="selectStatCnt" resultType="cn.com.payu.app.modules.model.ApplySummaryDTO">
+        select count(*) statCnt, (select count(*) from t_cust_user_profile where del_flag = 0) totalCnt
+        from t_cust_user_profile tcup
+        where DATE_FORMAT(tcup.created_date, '%Y-%m-%d') between #{sDate} and #{eDate}
+    </select>
+
 </mapper>

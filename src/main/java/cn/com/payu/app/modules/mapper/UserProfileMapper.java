@@ -1,9 +1,12 @@
 package cn.com.payu.app.modules.mapper;
 
 import cn.com.payu.app.modules.entity.UserProfile;
+import cn.com.payu.app.modules.model.ApplySummaryDTO;
 import cn.com.payu.app.modules.model.MngCUserDTO;
+import cn.com.payu.app.modules.model.RegisterSummaryDTO;
 import cn.com.payu.app.modules.model.export.MngCUserExport;
 import cn.com.payu.app.modules.model.params.CustUserSearch;
+import cn.com.payu.app.modules.model.params.SummarySearch;
 import com.glsx.plat.mybatis.mapper.CommonBaseMapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -20,5 +23,7 @@ public interface UserProfileMapper extends CommonBaseMapper<UserProfile> {
     List<MngCUserDTO> search(CustUserSearch search);
 
     List<MngCUserExport> export(CustUserSearch search);
+
+    ApplySummaryDTO selectStatCnt(SummarySearch search);
 
 }

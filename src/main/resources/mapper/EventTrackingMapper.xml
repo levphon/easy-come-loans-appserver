@@ -37,4 +37,10 @@
           and DATE_FORMAT(tet.created_date, '%Y-%m-%d') &lt;= #{eDate}
         group by tet.channel, date_format(tet.created_date, '%Y-%m-%d'), tet.cuser_id
     </select>
+
+    <select id="selectStatCnt" resultType="cn.com.payu.app.modules.model.ClickSummaryDTO">
+        select count(*) statCnt, (select count(*) from t_event_tracking) totalCnt
+        from t_event_tracking tec
+        where DATE_FORMAT(tec.created_date,'%Y-%m-%d') between #{sDate} and #{eDate}
+    </select>
 </mapper>
