@@ -14,6 +14,7 @@ import cn.com.payu.app.modules.model.params.ProductSearch;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.glsx.plat.common.utils.StringUtils;
 import com.glsx.plat.core.enums.SysConstants;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -46,6 +47,9 @@ public class MngProductService {
         if (cnt > 0) {
             throw new AppServerException("该产品已存在！");
         }
+        if (StringUtils.isNullOrEmpty(productBO.getOs())) {
+            productBO.setOs(null);
+        }
         Product product = ProductConverter.INSTANCE.bo2do(productBO);
         product.setType(0);
         product.setEnableStatus(SysConstants.EnableStatus.disable.getCode());
@@ -58,7 +62,9 @@ public class MngProductService {
         if (existProduct != null && !existProduct.getId().equals(productBO.getId())) {
             throw new AppServerException(productBO.getName() + "产品已存在！");
         }
-
+        if (StringUtils.isNullOrEmpty(productBO.getOs())) {
+            productBO.setOs(null);
+        }
         Product product = ProductConverter.INSTANCE.bo2do(productBO);
         product.setUpdatedDate(new Date());
         productMapper.updateByPrimaryKeySelective(product);
