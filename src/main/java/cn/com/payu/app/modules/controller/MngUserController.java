@@ -7,6 +7,7 @@ import cn.com.payu.app.modules.service.MngUserService;
 import com.github.pagehelper.PageInfo;
 import com.glsx.plat.common.annotation.SysLog;
 import com.glsx.plat.common.enums.OperateType;
+import com.glsx.plat.common.model.DropOptions;
 import com.glsx.plat.context.utils.validator.AssertUtils;
 import com.glsx.plat.core.web.R;
 import io.swagger.annotations.Api;
@@ -15,6 +16,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -53,6 +55,12 @@ public class MngUserController {
     public R info(@RequestParam("id") Long id) {
         MngUserDTO user = mngUserService.userInfo(id);
         return R.ok().data(user);
+    }
+
+    @GetMapping("/options")
+    public R options(String username) {
+        List<DropOptions> list = mngUserService.options(username);
+        return R.ok().data(list);
     }
 
     @SysLog(module = MODULE, action = OperateType.DELETE, saveLog = false)

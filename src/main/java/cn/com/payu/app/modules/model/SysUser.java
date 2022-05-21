@@ -1,8 +1,12 @@
 package cn.com.payu.app.modules.model;
 
+import cn.com.payu.app.modules.entity.Department;
+import cn.com.payu.app.modules.entity.Role;
+import cn.com.payu.app.modules.entity.Tenant;
 import lombok.Data;
 
-import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
 @Data
 public class SysUser {
@@ -16,8 +20,24 @@ public class SysUser {
     private Integer dataType;
 
     /**
+     * 用户所属租户
+     */
+    private Tenant tenant;
+
+    /**
+     * 用户所属部门
+     */
+    private Department department;
+
+    /**
      * 用户角色
      */
-    private Collection<Long> roleIds;
+    private List<Role> roles;
+
+    /**
+     * 数据创建人id
+     */
+    private Set<Long> visibleCreatorIds;
+
 
 }

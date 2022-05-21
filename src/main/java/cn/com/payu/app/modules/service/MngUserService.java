@@ -1,14 +1,8 @@
 package cn.com.payu.app.modules.service;
 
 import cn.com.payu.app.common.exception.AppServerException;
-import cn.com.payu.app.modules.entity.Channel;
-import cn.com.payu.app.modules.entity.MngUser;
-import cn.com.payu.app.modules.entity.Role;
-import cn.com.payu.app.modules.entity.UserRoleRelation;
-import cn.com.payu.app.modules.mapper.ChannelMapper;
-import cn.com.payu.app.modules.mapper.MngUserMapper;
-import cn.com.payu.app.modules.mapper.RoleMapper;
-import cn.com.payu.app.modules.mapper.UserRoleRelationMapper;
+import cn.com.payu.app.modules.entity.*;
+import cn.com.payu.app.modules.mapper.*;
 import cn.com.payu.app.modules.model.MngUserDTO;
 import cn.com.payu.app.modules.model.SysUser;
 import cn.com.payu.app.modules.model.params.MngUserBO;
@@ -18,6 +12,7 @@ import cn.hutool.core.lang.UUID;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.glsx.plat.common.model.DropOptions;
 import com.glsx.plat.common.utils.ObjectUtils;
 import com.glsx.plat.common.utils.StringUtils;
 import com.glsx.plat.exception.SystemMessage;
@@ -47,7 +42,10 @@ public class MngUserService {
     private RoleMapper roleMapper;
 
     @Resource
-    private ChannelMapper channelMapper;
+    private TenantMapper tenantMapper;
+
+    @Resource
+    private DepartmentMapper departmentMapper;
 
     @Resource
     private UserRoleRelationMapper userRoleRelationMapper;
@@ -83,15 +81,15 @@ public class MngUserService {
 
         List<Long> departmentIdList = userList.stream().map(MngUser::getDepartmentId).collect(Collectors.toList());
 
-        List<Channel> departmentList = channelMapper.selectByIds(departmentIdList);
+        List<Department> departmentList = departmentMapper.selectByIds(departmentIdList);
 
-        Map<Long, Channel> departmentMap = departmentList.stream().collect(Collectors.toMap(Channel::getId, d -> d));
+        Map<Long, Department> departmentMap = departmentList.stream().collect(Collectors.toMap(Department::getId, d -> d));
 
         for (MngUser user : userList) {
             MngUserDTO userDTO = new MngUserDTO();
             BeanUtils.copyProperties(user, userDTO);
-            Channel department = departmentMap.get(user.getDepartmentId());
-            userDTO.setDepartmentName(Optional.ofNullable(department).map(d -> department.getChannelName()).orElse(""));
+            Department department = departmentMap.get(user.getDepartmentId());
+            userDTO.setDepartmentName(Optional.ofNullable(department).map(d -> department.getDepartmentName()).orElse(""));
             userDTOList.add(userDTO);
         }
         return userDTOList;
@@ -178,9 +176,15 @@ public class MngUserService {
             sysUser.setDataType(user.getDataType());
             sysUser.setDepartmentId(user.getDepartmentId());
 
-            Set<Long> roles = userRoleRelationMapper.selectRoleIdsByUserId(userId);
-            sysUser.setRoleIds(roles);
+            Set<Long> roleIds = userRoleRelationMapper.selectRoleIdsByUserId(userId);
+            List<Role> roleList = roleMapper.selectByIds(roleIds);
+            sysUser.setRoles(roleList);
 
+            Tenant tenant = tenantMapper.selectById(user.getTenantId());
+            sysUser.setTenant(tenant);
+
+            Department department = departmentMapper.selectById(sysUser.getDepartmentId());
+            sysUser.setDepartment(department);
             return sysUser;
         }
         return null;
@@ -307,6 +311,22 @@ public class MngUserService {
             throw new AppServerException(SystemMessage.FAILURE.getCode(), "管理员账号不能被删除");
         }
         return mngUserMapper.logicDeleteById(id);
+    }
+
+    public List<DropOptions> options(String username) {
+        if (MngContextHolder.isSuperAdmin()) {
+            return mngUserMapper.selectOptions(username);
+        } else {
+            Set<Long> userIdSet = MngContextHolder.getVisibleCreatorIds();
+            List<DropOptions> permList = Lists.newArrayList();
+            List<DropOptions> list = mngUserMapper.selectOptions(username);
+            list.forEach(option -> {
+                if (userIdSet.contains(option.getId())) {
+                    permList.add(option);
+                }
+            });
+            return permList;
+        }
     }
 
 }

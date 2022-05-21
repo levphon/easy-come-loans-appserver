@@ -4,7 +4,7 @@ import cn.hutool.db.Page;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-import java.util.List;
+import java.util.Collection;
 
 /**
  * @author payu
@@ -17,10 +17,12 @@ public class MngUserSearch extends Page {
 
     private Long userId;
 
+    private Collection<Long> userIds;
+
     private Integer userStatus;
 
     private Long departmentId;
 
-    private List<Long> departmentIdList;
+    private Collection<Long> departmentIds;
 
 }
