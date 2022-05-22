@@ -29,6 +29,8 @@
         <result column="off_shelf_time" jdbcType="VARCHAR" property="offShelfTime"/>
         <result column="max_daily_uv" jdbcType="INTEGER" property="maxDailyUV"/>
         <result column="max_total_uv" jdbcType="INTEGER" property="maxTotalUV"/>
+        <result column="tips_content" jdbcType="VARCHAR" property="tipsContent"/>
+        <result column="tips_status" jdbcType="TINYINT" property="tipsStatus"/>
         <result column="del_flag" jdbcType="TINYINT" property="delFlag"/>
         <result column="created_date" jdbcType="TIMESTAMP" property="createdDate"/>
         <result column="created_by" jdbcType="INTEGER" property="createdBy"/>
@@ -40,7 +42,7 @@
           WARNING - @mbg.generated
         -->
         id, channel, name, logo, tags, province, province_code, city, city_code, max_amount, day_interest_rate, used_cnt, url, type, os, remark, order_num,
-        periods, shelf_time, off_shelf_time, max_daily_uv, max_total_uv, position, unit_price,
+        periods, shelf_time, off_shelf_time, max_daily_uv, max_total_uv, position, unit_price, tips_content, tips_status,
         enable_status, del_flag, created_date, created_by, updated_date, updated_by
     </sql>
 
@@ -161,6 +163,12 @@
     <update id="increaseUsedCntById">
         update t_product
         set used_cnt = used_cnt + 1
+        where id = #{id}
+    </update>
+
+    <update id="logicDeleteById">
+        update t_product
+        set del_flag = -1
         where id = #{id}
     </update>
 </mapper>

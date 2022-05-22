@@ -41,7 +41,7 @@ public interface RoleMapper extends CommonBaseMapper<Role> {
      * @param id
      * @return
      */
-    int logicDeleteById(Long id);
+    int logicDeleteById(@Param("id") Long id);
 
     int selectCntByName(@Param("roleName") String roleName);
 

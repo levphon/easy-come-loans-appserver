@@ -26,5 +26,7 @@ public class MngProductInfoDTO {
     private Integer orderNum;
     private Integer position;
     private String remark;
+    private String tipsContent;
+    private Integer tipsStatus;
 
 }

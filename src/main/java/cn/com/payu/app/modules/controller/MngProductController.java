@@ -6,6 +6,7 @@ import cn.com.payu.app.modules.model.MngProductInfoDTO;
 import cn.com.payu.app.modules.model.MngProductSettingDTO;
 import cn.com.payu.app.modules.model.export.MngProductExport;
 import cn.com.payu.app.modules.model.params.MngProductSettingBO;
+import cn.com.payu.app.modules.model.params.MngProductTipsSettingBO;
 import cn.com.payu.app.modules.model.params.ProductSearch;
 import cn.com.payu.app.modules.service.MngProductService;
 import com.github.pagehelper.PageInfo;
@@ -89,11 +90,25 @@ public class MngProductController {
         return R.ok();
     }
 
+    @ApiOperation("产品配置")
+    @PostMapping(value = "/tips/setting")
+    public R tipsSetting(@RequestBody MngProductTipsSettingBO settingBO) {
+        mngProductService.tipsSetting(settingBO);
+        return R.ok();
+    }
+
     @ApiOperation("产品上下架")
     @GetMapping("/uplow")
     public R uplow(@RequestParam("id") Long id) {
         int uplow = mngProductService.uplow(id);
         return R.ok().data(uplow);
+    }
+
+    @SysLog(module = MODULE, action = OperateType.DELETE)
+    @GetMapping("/delete")
+    public R delete(@RequestParam("productId") Long productId) {
+        mngProductService.logicDeleteById(productId);
+        return R.ok();
     }
 
 }

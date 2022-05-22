@@ -29,4 +29,6 @@ public interface ProductMapper extends CommonBaseMapper<Product> {
 
     int increaseUsedCntById(@Param("id") Long id);
 
+    int logicDeleteById(@Param("id") Long id);
+
 }

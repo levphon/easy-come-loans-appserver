@@ -125,4 +125,10 @@ public class Product extends BaseEntity {
     @Column(name = "max_total_uv")
     private Integer maxTotalUV;
 
+    @Column(name = "tips_content")
+    private String tipsContent;
+
+    @Column(name = "tips_status")
+    private Integer tipsStatus;
+
 }

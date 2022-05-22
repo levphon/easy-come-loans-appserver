@@ -10,6 +10,7 @@ import cn.com.payu.app.modules.model.MngProductInfoDTO;
 import cn.com.payu.app.modules.model.MngProductSettingDTO;
 import cn.com.payu.app.modules.model.export.MngProductExport;
 import cn.com.payu.app.modules.model.params.MngProductSettingBO;
+import cn.com.payu.app.modules.model.params.MngProductTipsSettingBO;
 import cn.com.payu.app.modules.model.params.ProductSearch;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -114,6 +115,19 @@ public class MngProductService {
             return SysConstants.EnableStatus.enable.getCode();
         }
         return 0;
+    }
+
+    public void logicDeleteById(Long id) {
+        productMapper.logicDeleteById(id);
+    }
+
+    public void tipsSetting(MngProductTipsSettingBO settingBO) {
+        Product product = productMapper.selectById(settingBO.getProductId());
+        if (product != null) {
+            product.setTipsContent(settingBO.getContent());
+            product.setTipsStatus(settingBO.getEnableStatus());
+            productMapper.updateByPrimaryKeySelective(product);
+        }
     }
 
 }
