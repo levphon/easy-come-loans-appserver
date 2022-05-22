@@ -32,8 +32,10 @@ public interface MngUserMapper extends CommonBaseMapper<MngUser> {
 
     int selectCntByAccount(@Param("account") String username);
 
+    int updatePassword(@Param("id") Long id, @Param("password") String password);
+
     int logicDeleteById(@Param("id") Long id);
 
-    List<DropOptions> selectOptions(@Param("username") String username);
+    List<DropOptions> selectOptions(@Param("departmentId") Long departmentId, @Param("username") String username);
 
 }

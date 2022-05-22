@@ -5,8 +5,10 @@ import cn.com.payu.app.modules.entity.*;
 import cn.com.payu.app.modules.mapper.*;
 import cn.com.payu.app.modules.model.MngUserDTO;
 import cn.com.payu.app.modules.model.SysUser;
+import cn.com.payu.app.modules.model.params.ChangePasswordBO;
 import cn.com.payu.app.modules.model.params.MngUserBO;
 import cn.com.payu.app.modules.model.params.MngUserSearch;
+import cn.com.payu.app.modules.model.view.SuperTreeModel;
 import cn.com.payu.app.modules.utils.MngContextHolder;
 import cn.hutool.core.lang.UUID;
 import com.github.pagehelper.Page;
@@ -46,6 +48,9 @@ public class MngUserService {
 
     @Resource
     private DepartmentMapper departmentMapper;
+
+    @Resource
+    private OrganizationMapper organizationMapper;
 
     @Resource
     private UserRoleRelationMapper userRoleRelationMapper;
@@ -305,6 +310,20 @@ public class MngUserService {
         user.setPassword(hash.toString());
     }
 
+    /**
+     * 修改密码
+     *
+     * @param passwordBO
+     */
+    public void changePassword(ChangePasswordBO passwordBO) {
+        MngUser user = mngUserMapper.selectById(passwordBO.getUserId());
+
+        verifyPassword(user, passwordBO.getOldPassword());
+
+        SimpleHash hash = new SimpleHash(hcm.getHashAlgorithmName(), passwordBO.getNewPassword(), user.getSalt(), hcm.getHashIterations());
+        mngUserMapper.updatePassword(passwordBO.getUserId(), hash.toString());
+    }
+
     @Transactional(rollbackFor = Exception.class)
     public int logicDeleteById(Long id) {
         if (MngContextHolder.ADMIN_ID.equals(id)) {
@@ -313,20 +332,105 @@ public class MngUserService {
         return mngUserMapper.logicDeleteById(id);
     }
 
-    public List<DropOptions> options(String username) {
-        if (MngContextHolder.isSuperAdmin()) {
-            return mngUserMapper.selectOptions(username);
-        } else {
-            Set<Long> userIdSet = MngContextHolder.getVisibleCreatorIds();
-            List<DropOptions> permList = Lists.newArrayList();
-            List<DropOptions> list = mngUserMapper.selectOptions(username);
-            list.forEach(option -> {
-                if (userIdSet.contains(option.getId())) {
-                    permList.add(option);
-                }
-            });
-            return permList;
+    public List<DropOptions> options(Long departmentId, String username) {
+        return mngUserMapper.selectOptions(departmentId, username);
+    }
+
+    public List<SuperTreeModel> suitableSuperUsers(Long departmentId) {
+        //部门
+        Department department = departmentMapper.selectById(departmentId);
+        if (department == null) {
+            throw new AppServerException("部门不存在");
         }
+
+        //当前部门
+        SuperTreeModel selfTreeModel = MngUserService.applySuperTreeModel(department);
+        selfTreeModel.setRoot(true);
+        selfTreeModel.setDisabled(true);
+
+        //当前部门用户
+        List<MngUser> departmentUserList = mngUserMapper.select(new MngUser().setDepartmentId(departmentId));
+
+        List<SuperTreeModel> departmentUserModels = departmentUserList.stream().map(MngUserService::applySuperTreeModel).collect(Collectors.toList());
+
+        selfTreeModel.setChildren(departmentUserModels);
+
+        //直接三级
+        List<Organization> superiorOrgList = organizationMapper.selectSuperiorOrgsByDepths(departmentId, Lists.newArrayList(1, 2, 3));
+        if (CollectionUtils.isEmpty(superiorOrgList)) {
+            //无上级，返回自己
+            return Lists.newArrayList(selfTreeModel);
+        }
+
+        //上一级
+        Organization superiorOrg = superiorOrgList.get(0);
+
+        SuperTreeModel superTreeModel = buildSuperTreeNode(superiorOrg, selfTreeModel);
+
+        if (superiorOrgList.size() > 1) {
+            //上二级
+            Organization superiorOrg2 = superiorOrgList.get(1);
+
+            SuperTreeModel superTreeModel2 = buildSuperTreeNode(superiorOrg2, superTreeModel);
+
+            if (superiorOrgList.size() > 2) {
+                //上三级
+                Organization superiorOrg3 = superiorOrgList.get(2);
+
+                SuperTreeModel superTreeModel3 = buildSuperTreeNode(superiorOrg3, superTreeModel2);
+
+                return Lists.newArrayList(superTreeModel3);
+            } else {
+                return Lists.newArrayList(superTreeModel2);
+            }
+        } else {
+            return Lists.newArrayList(superTreeModel);
+        }
+    }
+
+
+    /**
+     * 构建上级节点
+     *
+     * @param superiorOrg
+     * @param supTreeModel
+     * @return
+     */
+    private SuperTreeModel buildSuperTreeNode(Organization superiorOrg, SuperTreeModel supTreeModel) {
+        Department superiorDepartment = departmentMapper.selectById(superiorOrg.getSuperiorId());
+
+        SuperTreeModel superTreeModel = MngUserService.applySuperTreeModel(superiorDepartment);
+
+        List<MngUser> superiorUserList = mngUserMapper.select(new MngUser().setDepartmentId(superiorDepartment.getId()));
+
+        List<SuperTreeModel> userChildren = superiorUserList.stream().map(MngUserService::applySuperTreeModel).collect(Collectors.toList());
+
+        List<SuperTreeModel> superiorChildren = Lists.newArrayList();
+        superiorChildren.addAll(userChildren);
+        superiorChildren.add(supTreeModel);
+
+        superTreeModel.setChildren(superiorChildren);
+
+        return superTreeModel;
+    }
+
+    private static SuperTreeModel applySuperTreeModel(Department dept) {
+        SuperTreeModel model = new SuperTreeModel();
+        model.setId(dept.getId());
+        model.setLabel(dept.getDepartmentName());
+        model.setOrder(dept.getOrderNum());
+        model.setType(0);
+        model.setRoot(dept.getIsRoot() == 1);
+        model.setDisabled(dept.getIsRoot() == 1);
+        return model;
+    }
+
+    private static SuperTreeModel applySuperTreeModel(MngUser du) {
+        SuperTreeModel model = new SuperTreeModel();
+        model.setId(du.getId());
+        model.setLabel(du.getUsername());
+        model.setType(1);
+        return model;
     }
 
 }

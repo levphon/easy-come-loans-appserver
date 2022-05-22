@@ -1,8 +1,10 @@
 package cn.com.payu.app.modules.controller;
 
 import cn.com.payu.app.modules.model.MngUserDTO;
+import cn.com.payu.app.modules.model.params.ChangePasswordBO;
 import cn.com.payu.app.modules.model.params.MngUserBO;
 import cn.com.payu.app.modules.model.params.MngUserSearch;
+import cn.com.payu.app.modules.model.view.SuperTreeModel;
 import cn.com.payu.app.modules.service.MngUserService;
 import com.github.pagehelper.PageInfo;
 import com.glsx.plat.common.annotation.SysLog;
@@ -58,8 +60,8 @@ public class MngUserController {
     }
 
     @GetMapping("/options")
-    public R options(String username) {
-        List<DropOptions> list = mngUserService.options(username);
+    public R options(@RequestParam("departmentId") Long departmentId, String username) {
+        List<DropOptions> list = mngUserService.options(departmentId, username);
         return R.ok().data(list);
     }
 
@@ -68,6 +70,19 @@ public class MngUserController {
     public R delete(@RequestParam("id") Long id) {
         mngUserService.logicDeleteById(id);
         return R.ok();
+    }
+
+    @SysLog(module = MODULE, value = "修改密码", action = OperateType.EDIT)
+    @PostMapping(value = "/changePassword")
+    public R changePassword(@RequestBody @Validated ChangePasswordBO passwordBO) {
+        mngUserService.changePassword(passwordBO);
+        return R.ok();
+    }
+
+    @GetMapping("/suitableSuperUsers")
+    public R suitableSuperUsers(@RequestParam("departmentId") Long departmentId) {
+        List<SuperTreeModel> superTreeModels = mngUserService.suitableSuperUsers(departmentId);
+        return R.ok().data(superTreeModels);
     }
 
 }

@@ -58,10 +58,10 @@
         <if test="userStatus != null">
             and enable_status = #{userStatus}
         </if>
-        <if test="departmentIdList != null and departmentIdList.size() > 0">
+        <if test="departmentIds != null and departmentIds.size() > 0">
             and department_id in
-            <foreach collection="departmentIdList" item="departmentId" open="(" close=")" separator=",">
-                #{departmentId}
+            <foreach collection="departmentIds" item="item" open="(" close=")" separator=",">
+                #{item}
             </foreach>
         </if>
         order by id desc
@@ -187,11 +187,18 @@
         select id, username name, account code
         from t_mng_user
         where del_flag = 0
+        and department_id = #{departmentId}
         <if test="username != null and username != ''">
             and username like CONCAT('%', #{username}, '%')
         </if>
         order by id
     </select>
+
+    <update id="updatePassword">
+        update t_user
+        set password = #{password}
+        where id = #{id}
+    </update>
 
     <update id="logicDeleteById">
         update t_mng_user

@@ -4,12 +4,14 @@ import cn.com.payu.app.modules.model.SysUser;
 import cn.com.payu.app.modules.utils.MngContextHolder;
 import com.glsx.plat.mybatis.base.BaseEntity;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 import javax.persistence.Column;
 import javax.persistence.Table;
 import java.util.Date;
 
 @Data
+@Accessors(chain = true)
 @Table(name = "t_mng_user")
 public class MngUser extends BaseEntity {
 
