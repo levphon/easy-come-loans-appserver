@@ -80,7 +80,7 @@
         select id, name, logo, tags, tips_content tipsContent, tips_status tipsStatus
         from t_product
         where del_flag = 0
-        -- and enable_status = 1
+        and enable_status = 1
         and tips_status = 1
         <if test="provinceCode != null and provinceCode != ''">
             and province_code = #{provinceCode}
