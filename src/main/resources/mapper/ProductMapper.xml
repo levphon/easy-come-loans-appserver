@@ -7,6 +7,7 @@
         -->
         <id column="id" jdbcType="INTEGER" property="id"/>
         <result column="channel" jdbcType="VARCHAR" property="channel"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
         <result column="logo" jdbcType="VARCHAR" property="logo"/>
         <result column="tags" jdbcType="VARCHAR" property="tags"/>
         <result column="province" jdbcType="VARCHAR" property="province"/>
@@ -72,7 +73,25 @@
         <if test="position != null">
             and position = #{position}
         </if>
-        order by position, order_num
+        order by unit_price desc, order_num
+    </select>
+
+    <select id="selectRecommend" resultType="cn.com.payu.app.modules.model.ProductTipsDTO">
+        select id, name, logo, tags, tips_content tipsContent, tips_status tipsStatus
+        from t_product
+        where del_flag = 0
+        -- and enable_status = 1
+        and tips_status = 1
+        <if test="provinceCode != null and provinceCode != ''">
+            and province_code = #{provinceCode}
+        </if>
+        <if test="cityCode != null and cityCode != ''">
+            and city_code = #{cityCode}
+        </if>
+        <if test="os != null and os != ''">
+            and os = #{os}
+        </if>
+        order by unit_price desc
     </select>
 
     <select id="search" resultType="cn.com.payu.app.modules.model.MngProductDTO">

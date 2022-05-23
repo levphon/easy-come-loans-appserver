@@ -4,11 +4,15 @@ import cn.com.payu.app.common.exception.AppServerException;
 import cn.com.payu.app.modules.converter.ProductConverter;
 import cn.com.payu.app.modules.entity.Product;
 import cn.com.payu.app.modules.entity.ProductDrainage;
+import cn.com.payu.app.modules.entity.UserProfile;
 import cn.com.payu.app.modules.mapper.ProductDrainageMapper;
 import cn.com.payu.app.modules.mapper.ProductMapper;
+import cn.com.payu.app.modules.mapper.UserProfileMapper;
 import cn.com.payu.app.modules.model.ProductDTO;
+import cn.com.payu.app.modules.model.ProductTipsDTO;
 import cn.com.payu.app.modules.model.params.ProductSearch;
 import cn.com.payu.app.modules.utils.AppContextHolder;
+import com.glsx.plat.common.utils.StringUtils;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -16,6 +20,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -26,6 +31,9 @@ public class ProductService {
 
     @Resource
     private ProductDrainageMapper productDrainageMapper;
+
+    @Resource
+    private UserProfileMapper userProfileMapper;
 
     public List<ProductDTO> list(ProductSearch search) {
         List<Product> itemList = productMapper.selectUsable(search);
@@ -69,5 +77,13 @@ public class ProductService {
         return product.getUrl();
     }
 
+    public List<ProductTipsDTO> recommend(ProductSearch search) {
+        UserProfile userProfile = userProfileMapper.selectByUserId(AppContextHolder.getUserId());
+        if (StringUtils.isNullOrEmpty(search.getCityCode())) {
+            search.setCityCode(userProfile.getCityCode());
+        }
+        List<ProductTipsDTO> list = productMapper.selectRecommend(search);
+        return list.stream().filter(ptd -> StringUtils.isNotEmpty(ptd.getTipsContent())).collect(Collectors.toList());
+    }
 
 }

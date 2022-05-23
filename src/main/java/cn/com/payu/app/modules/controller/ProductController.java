@@ -1,6 +1,7 @@
 package cn.com.payu.app.modules.controller;
 
 import cn.com.payu.app.modules.model.ProductDTO;
+import cn.com.payu.app.modules.model.ProductTipsDTO;
 import cn.com.payu.app.modules.model.params.ProductSearch;
 import cn.com.payu.app.modules.service.ProductService;
 import com.glsx.plat.core.web.R;
@@ -33,6 +34,12 @@ public class ProductController {
     public R click(@RequestParam("productId") Long productId) {
         String url = productService.click(productId);
         return R.ok().data(url);
+    }
+
+    @GetMapping(value = "/recommend")
+    public R recommend(ProductSearch search) {
+        List<ProductTipsDTO> items = productService.recommend(search);
+        return R.ok().data(items);
     }
 
 }

@@ -2,6 +2,7 @@ package cn.com.payu.app.modules.mapper;
 
 import cn.com.payu.app.modules.entity.Product;
 import cn.com.payu.app.modules.model.MngProductDTO;
+import cn.com.payu.app.modules.model.ProductTipsDTO;
 import cn.com.payu.app.modules.model.export.MngProductExport;
 import cn.com.payu.app.modules.model.params.ProductSearch;
 import com.glsx.plat.mybatis.mapper.CommonBaseMapper;
@@ -20,6 +21,8 @@ public interface ProductMapper extends CommonBaseMapper<Product> {
     Product selectByName(@Param("name") String name);
 
     List<Product> selectUsable(ProductSearch search);
+
+    List<ProductTipsDTO> selectRecommend(ProductSearch search);
 
     List<MngProductDTO> search(ProductSearch search);
 
