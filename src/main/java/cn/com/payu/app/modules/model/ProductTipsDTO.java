@@ -9,6 +9,7 @@ public class ProductTipsDTO {
     private String name;
     private String logo;
     private String tags;
+    private String url;
     private String tipsContent;
 
 }
