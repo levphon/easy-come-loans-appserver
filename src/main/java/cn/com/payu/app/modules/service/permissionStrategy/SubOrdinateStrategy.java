@@ -200,7 +200,7 @@ public class SubOrdinateStrategy extends PermissionStrategy {
             orgModel.setTenantId(dep.getTenantId());
             Long userNumber = subordinateUserCountMap.get(dep.getId());
             orgModel.setUserNumber(userNumber != null ? Math.toIntExact(userNumber) : 0);
-            orgModel.setOrderNum(dep.getOrderNum());
+            orgModel.setOrderNum(String.valueOf(dep.getOrderNum()));
             orgModel.setIsRoot(dep.getIsRoot());
             return orgModel;
         }).collect(Collectors.toList());
@@ -259,7 +259,7 @@ public class SubOrdinateStrategy extends PermissionStrategy {
             userModel.setTenantId(user.getTenantId());
             userModel.setUserNumber(0);
             userModel.setType("u");
-            userModel.setOrderNum(Math.toIntExact(user.getId()));
+            userModel.setOrderNum(String.valueOf(user.getId()));
             userModel.setIsRoot(0);
             list.add(userModel);
         });

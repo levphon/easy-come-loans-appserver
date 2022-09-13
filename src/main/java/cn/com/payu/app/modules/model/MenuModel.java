@@ -16,7 +16,7 @@ public class MenuModel implements Serializable {
     private Integer type;
     private String icon;
     private String frontRoute;
-    private Integer orderNum;
+    private String orderNum;
     private boolean hasChildren;
     private boolean checked;
 

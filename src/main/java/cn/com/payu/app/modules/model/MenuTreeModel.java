@@ -47,7 +47,7 @@ public class MenuTreeModel implements TreeModel<MenuModel> {
     }
 
     @Override
-    public Integer getOrder() {
+    public String getOrder() {
         return menu.getOrderNum();
     }
 

@@ -46,7 +46,7 @@ public class OrgTreeModel implements TreeModel<OrgModel> {
 
     @JsonIgnore
     @Override
-    public Integer getOrder() {
+    public String getOrder() {
         return org.getOrderNum();
     }
 

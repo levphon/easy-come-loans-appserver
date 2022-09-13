@@ -25,7 +25,7 @@ public class OrgModel {
     @JsonIgnore
     private Integer userNumber;
     @JsonIgnore
-    private Integer orderNum;
+    private String orderNum;
 
     public Integer getUserNumber() {
         return userNumber == null ? 0 : userNumber;
